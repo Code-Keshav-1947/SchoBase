@@ -8,8 +8,8 @@ def dashboard(request):
     att_status = 'Pending...'
     fee_status = 'Pending'
     cards = [
-        {'head': 'Attendance','text':'Your today Attendance status was','status':att_status},
-        {'head': 'Fees Status','text':'Your Fees status was','status':fee_status}
+        {'head': 'Attendance','text':'Your today Attendance status was','status':att_status,'url':"#"},
+        {'head': 'Fees Status','text':'Your Fees status was','status':fee_status,'url':"#"}
     ]
     return render(request,"dashboard/student_dashboard.html",{"cards":cards})
   elif request.user.role == "teacher":

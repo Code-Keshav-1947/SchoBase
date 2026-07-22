@@ -26,7 +26,3 @@ urlpatterns = [
     path('acc/', include('accounts.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
-
-# 2. Add the document_root parameter so Django knows WHERE to look for files
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
