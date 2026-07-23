@@ -6,11 +6,26 @@
 
 {% block content %}
 <style>
-  a{
+  /* Remove default link underlines and force card text to inherit color */
+  a.card-link-wrapper {
     text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Smooth transition for the hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  /* Lifts the card slightly and deepens the shadow on hover */
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25) !important;
   }
 </style>
-<div class="position-relative w-100 mx-auto" style="max-width: 100%;">
+
+<!-- Hero Section -->
+<div class="position-relative w-100 mx-auto mb-5" style="max-width: 100%;">
     <img class="img-fluid rounded mx-auto d-block w-100" src="{% static 'img/dash_hero.jpg' %}" alt="Dashboard Hero">
     <div class="position-absolute start-50 translate-middle text-center w-100 px-3" style="top: 25%;">
         <h1 class="card-title display-4 text-dark text-capitalize fw-bold" style="text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.9), 2px 2px 4px rgba(255, 255, 255, 0.8); font-size: calc(1.5rem + 3vw);">
@@ -18,15 +33,25 @@
         </h1>
     </div>
 </div>
-{% for card in cards %}
-<a href="{{  card.url  }}">
-<div class="card text-bg-primary mb-3 mt-5" style="max-width: 18rem;margin:auto;">
-  <div class="card-header">{{ card.head}}</div>
-  <div class="card-body">
-    <h5 class="card-title">{{ card.head }}</h5>
-    <p class="card-text">{{ card.text }} {{ card.status }}</p>
+
+<!-- Cards Grid Layout -->
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+    {% for card in cards %}
+    <div class="col" style="max-width: 22rem;">
+      <a href="{{ card.url }}" class="card-link-wrapper d-block h-100">
+        <!-- Replaced conflicting inline margins with Bootstrap grid and utility classes -->
+        <div class="card text-bg-primary h-100 shadow-sm hover-lift">
+          <div class="card-header border-bottom border-light border-opacity-25">{{ card.head }}</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ card.head }}</h5>
+            <p class="card-text">{{ card.text }} {{ card.status }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
   </div>
 </div>
-</a>
-{% endfor %}
 {% endblock %}
+

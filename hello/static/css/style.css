@@ -1,3 +1,15 @@
+/* Smooth transition ensures the animation is fluid, not jarring */
+.hover-border{
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Moves the card up by 5 pixels and deepens the shadow */
+.hover-border:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+
 footer {
     text-align: center;
     padding: 40px 20px;
