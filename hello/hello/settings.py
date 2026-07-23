@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e5qnw96kb85r0ju2qbk88tuca1bu**1s=98s*jg*kxkxq-e5-c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1","localhost"]
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,6 +109,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Storage Dir
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -134,3 +145,9 @@ STATICFILES_DIRS = [
 LOGIN_URL = '/acc/login/'
 AUTH_USER_MODEL = "accounts.CustomUser"
 LOGOUT_REDIRECT_URL = 'login'
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
+mimetypes.add_type("image/png", ".png", True)
+mimetypes.add_type("image/jpeg", ".jpg", True)
+mimetypes.add_type("image/gif", ".gif", True)

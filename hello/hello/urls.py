@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# 1. Add these two missing imports at the top
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,3 +25,7 @@ urlpatterns = [
     path('acc/', include('accounts.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+handler404 = "django.views.defaults.page_not_found"
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
