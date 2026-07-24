@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="en" data-bs-theme="dark" >
+<html lang="en"  >
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,6 +28,13 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
+        {% if nav_items %}
+          {% for i in nav_items %}
+            <li>
+              <a class="nav-link{% if request.path == i.url %} active{% endif %}" href="{{ i.url }}">{{ i.name }}</a>
+            </li>
+          {% endfor %}
+        {% endif %}
         <li class="nav-item mb-2 mx-2">
           <form class="d-flex" action="{% url 'logout' %}" method="post">
             {% csrf_token %}
@@ -53,14 +60,11 @@
             <div class="foot-box">
                 <h3>Quick Links</h3>
                     <a href="/">Home</a>
-                    <a href="#">Products</a>
-                    <a href="#">Contact us</a>
-            </div>
-            <div class="foot-box">
-                <h3>Contact Us</h3>
-                <p><i class="fa-solid fa-location-dot"></i> 123 Main Street, City, Country</p>
-                <p><i class="fa-solid fa-phone"></i> +91 9759706694</p>
-                <p><i class="fa-brands fa-whatsapp"></i> Whatsapp available</p>
+                    {% if nav_items %}
+                      {% for i in nav_items %}
+                        <a href="{{i.url}}">{{i.name}}</a>
+                      {% endfor %}
+                    {% endif %}
             </div>
             <div class="foot-bottom">
                 <p>@ 2026 Graphic Point. | All rights reserved.</p>
