@@ -24,8 +24,8 @@ urlpatterns = [
     path('', include('dashboard.urls'),name='dashboard'), 
     path('acc/', include('accounts.urls')),
     path('student/', include('student.urls')),
+    path('teacher/', include('teacher.urls')),
     # path('school/', include('school.urls')),
-    # path('teacher/', include('teacher.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 handler404 = "django.views.defaults.page_not_found"

@@ -7,7 +7,6 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
-            print("Form Valid")
 
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")

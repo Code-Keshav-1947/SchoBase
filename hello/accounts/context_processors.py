@@ -1,4 +1,4 @@
-# yourapp/context_processors.py
+
 
 NAV_ITEMS_BY_ROLE = {
     "student": [
@@ -9,10 +9,14 @@ NAV_ITEMS_BY_ROLE = {
     "teacher": [
         {"name": "Send Homework", "url": "/#"},
         {"name": "Attendance", "url": "/#"},
+        {"name": "View Profile", "url": "/#"},
+        {"name": "Notification", "url": "/#"},
     ],
     "school_admin": [
         {"name": "Manage Teachers", "url": "/#"},
         {"name": "Manage Students", "url": "/#"},
+        {"name": "View Profile", "url": "/#"},
+        {"name": "Notification", "url": "/#"},
     ],
 }
 
