@@ -1,20 +1,20 @@
 .dash-n {
-  font-weight: 500;
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   background: linear-gradient(to right, red, blue);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* Use filter instead of text-shadow to prevent covering the text */
-  filter: drop-shadow(0 0 8px rgba(186, 57, 57, 0.78));
+  background-clip: text;
+  
+  font-weight: 500;
+  text-shadow: 0 0 16px rgb(186 57 57 / 78%);
   animation: glower 1s ease-in-out infinite alternate;
 }
-
 @keyframes glower {
   100% {
-    filter: drop-shadow(0 0 14px rgba(186, 57, 57, 0.9));
+    text-shadow: 0 0 20px rgb(186 57 57 / 78%);
   }
 }
-
 a.card-link-wrapper {
   text-decoration: none;
   color: inherit;

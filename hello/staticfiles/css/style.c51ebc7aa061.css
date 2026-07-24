@@ -1,17 +1,18 @@
 .dash-n {
   font-weight: 500;
   background: linear-gradient(to right, red, blue);
-  -webkit-background-clip: text;
   background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* Use filter instead of text-shadow to prevent covering the text */
-  filter: drop-shadow(0 0 8px rgba(186, 57, 57, 0.78));
   animation: glower 1s ease-in-out infinite alternate;
 }
 
 @keyframes glower {
+  0% {
+    text-shadow: 0 0 16px rgba(186, 57, 57, 0.78);
+  }
   100% {
-    filter: drop-shadow(0 0 14px rgba(186, 57, 57, 0.9));
+    text-shadow: 0 0 20px rgba(186, 57, 57, 0.78);
   }
 }
 
