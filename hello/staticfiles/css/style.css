@@ -1,3 +1,8 @@
+@keyframes glower {
+  100%{
+    text-shadow: 0 0 20px rgb(186 57 57 / 78%);
+  }
+}
 a.card-link-wrapper {
   text-decoration: none;
   color: inherit;

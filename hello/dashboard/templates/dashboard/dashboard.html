@@ -17,16 +17,20 @@
     style="top: 25%"
   >
     <h1
-      class="card-title display-4 text-dark text-capitalize fw-bold"
+      class="card-title display-4  text-capitalize "
       style="
-        text-shadow:
-          0px 0px 10px rgba(255, 255, 255, 0.9),
-          2px 2px 4px rgba(255, 255, 255, 0.8);
-        font-size: calc(1.5rem + 3vw);
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(to right, red,blue);
+      -webkit-background-clip: text;
+      font-weight: 500;
+      text-shadow: 0 0 16px rgb(186 57 57 / 78%);
+      animation: glower 1s ease-in-out infinite alternate;
       "
     >
       Hello! {{ request.user.username }}
     </h1>
   </div>
 </div>
+{% block extra %}{% endblock extra %}
 {% endblock %}
