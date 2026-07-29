@@ -43,7 +43,7 @@ def dashboard(request):
                 "head": "View Students",
                 "text": "View students in your class and their details and edit them",
                 "status": "",
-                "url": "#",
+                "url": "/student/list",
             },
             {
                 "head": "Send Homework",

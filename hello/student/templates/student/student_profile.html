@@ -1,1 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="card m-auto my-5" style="width: 18rem">
+  <div class="card-header"><h1>Student Profile</h1></div>
+  <ul class="list-group list-group-flush">
+    {% if student.profile_pic %}
+    <li class="list-group-item">   
+        <img src="{{ student.profile_pic.url }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+      </li>
+      {% endif %}
+    <li class="list-group-item"><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</li>
+    <li class="list-group-item"><strong>Class Name:</strong> {{ student.class_name }}</li>
+    <li class="list-group-item"><strong>Roll Number:</strong> {{ student.roll_no }}</li>
+    <li class="list-group-item"><strong>School Name:</strong> {{ student.school }}</li>
+    <li class="list-group-item"><strong>Address:</strong> {{ student.address }}</li>
+    <li class="list-group-item"><strong>Phone Number:</strong> {{ student.phone }}</li>
+  </ul>
+</div>
+{% endblock %}
