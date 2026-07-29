@@ -1,9 +1,13 @@
 from functools import wraps
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Student
 from teacher.models import Teacher
 from .forms import StudentForm
+from django.contrib.auth import get_user_model
+
+user = get_user_model()
 
 def teacher_or_admin_required(view_func):
     @wraps(view_func)
@@ -25,16 +29,39 @@ def index(request):
 @login_required
 @teacher_or_admin_required
 def create_student(request):
+    teacher_school = request.user.school if hasattr(request.user, 'school') else None
+
     if request.method == 'POST':
-        form = StudentForm(request.POST, request.FILES)
+        form = StudentForm(request.POST, request.FILES, school=teacher_school)
+        
         if form.is_valid():
-            student = form.save(commit=False)
-            # Assign the user to the student if needed
-            # student.user = some_user_instance
-            student.save()
+            with transaction.atomic():
+                # 1. Grab the unique admission number from the form to use as the username
+                username = form.cleaned_data['first_name'] + form.cleaned_data['admission_no']
+                
+                # 2. Automatically create the User instance in the background
+                user_instance = user.objects.create_user(
+                    username=username,
+                    password=f"Stud@{username}{form.cleaned_data['admission_no']}", # Auto password (e.g., Stud@ADM123)
+                    role='student',
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
+                )
+                
+                # 3. Create the student record without committing to DB yet
+                student = form.save(commit=False)
+                
+                # 4. Link the new User account to this student
+                student.user = user_instance
+                if teacher_school:
+                    student.school = teacher_school
+                
+                # 5. Save the final student record completely
+                student.save()
+                
             return redirect('student:student_list')
     else:
-        form = StudentForm()
+        form = StudentForm(school=teacher_school)
     return render(request, 'student/create_student.html', {'form': form})
 
 @login_required

@@ -24,7 +24,7 @@ class Student(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=6, choices=gender_choices)
     phone = models.CharField(max_length=15, blank=True)
-    address = models.TextField(blank=True)
+    address = models.CharField(blank=True, null=True, help_text="Enter the address of the student",max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

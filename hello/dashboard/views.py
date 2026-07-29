@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-
+from student.models import Student
+from teacher.models import Teacher
 # Create your views here.
 
 
 @login_required
 def dashboard(request):
     if request.user.role == "student":
+        user_name = get_object_or_404(Student, user=request.user).first_name
         att_status = "Pending..."
         fee_status = "Pending"
         cards = [
@@ -23,8 +25,9 @@ def dashboard(request):
                 "url": "#",
             },
         ]
-        return render(request, "dashboard/student_dashboard.html", {"cards": cards})
+        return render(request, "dashboard/student_dashboard.html", {"cards": cards, "user_name": user_name})
     elif request.user.role == "teacher":
+        user_name = get_object_or_404(Teacher, user=request.user).first_name
         att_status = "Pending"
         fee_status = "Pending"
         if att_status == "Pending":
@@ -43,7 +46,7 @@ def dashboard(request):
                 "head": "View Students",
                 "text": "View students in your class and their details and edit them",
                 "status": "",
-                "url": "/student/list",
+                "url": "student/list_students/",
             },
             {
                 "head": "Send Homework",
@@ -58,10 +61,10 @@ def dashboard(request):
                 "url": "#",
             },
         ]
-        return render(request, "dashboard/teacher_dashboard.html", {"cards": cards})
+        return render(request, "dashboard/teacher_dashboard.html", {"cards": cards, "user_name": user_name})
     elif request.user.role == "school_admin":
         return render(request, "dashboard/school_admin.html")
     elif request.user.is_staff == True:
         return redirect("/admin")
     else:
-        return redirect(request, "404.html")
+        return redirect( login_required)

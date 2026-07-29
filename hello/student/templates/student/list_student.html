@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{% url 'create_student' %}" class="btn btn-success m-auto d-block mb-3">Add Student</a>
-<h1 class="m-auto h1 text-center my-4">Student List</h1>
-{% for student in students %}
-<div class="card m-auto mb-3" style="width: 18rem;">
-  <div class="card-body">
-      <strong>{{ student.first_name }} {{ student.last_name }}</strong>
+<div class="container mt-4">
+    <a href="{% url 'student:create_student' %}" class="btn btn-success m-auto d-block mb-3">Add Student</a>
+    <h1 class="m-auto h1 text-center my-4">Student List</h1>
+    {% for student in students %}
+    <div class="card m-auto mb-3" style="width: 18rem;">
+        <div class="card-body">
+            <strong>{{ student.first_name }} {{ student.last_name }}</strong>
         <p class="card-text">Roll No: {{ student.roll_no }}</p>
         <p class="card-text">Class: {{ student.class_name.name }}</p>
         <p class="card-text">Section: {{ student.section.name }}</p>

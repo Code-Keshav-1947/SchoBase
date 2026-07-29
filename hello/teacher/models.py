@@ -3,6 +3,8 @@ from django.conf import settings
 
 # Create your models here.
 class Teacher(models.Model):
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
