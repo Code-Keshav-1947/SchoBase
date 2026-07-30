@@ -56,14 +56,16 @@
         <div class="foot-container">
             <div class="foot-box">
                 <h3>SchoBase</h3>
-                <p>Discover our wide range of graphic products and services. Explore our collection and find the perfect solution for your needs.</p>
+                <p>
+                    SchoBase is a comprehensive school management system that streamlines administrative tasks, enhances communication, and improves overall efficiency in educational institutions. Our platform offers a user-friendly interface, robust features, and secure data management to support the needs of students, teachers, and administrators alike.
+                </p>
             </div>
             <div class="foot-box">
                 <h3>Quick Links</h3>
-                    <a href="/">Home</a>
+                    <a href="/" class="text-decoration-none">Home</a>
                     {% if nav_items %}
                       {% for i in nav_items %}
-                        <a href="{{i.url}}">{{i.name}}</a>
+                        <a href="{{i.url}}" class="text-decoration-none">{{i.name}}</a>
                       {% endfor %}
                     {% endif %}
             </div>

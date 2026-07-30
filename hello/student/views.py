@@ -37,12 +37,12 @@ def create_student(request):
         if form.is_valid():
             with transaction.atomic():
                 # 1. Grab the unique admission number from the form to use as the username
-                username = form.cleaned_data['first_name'] + form.cleaned_data['admission_no']
+                username = form.cleaned_data['first_name'] 
                 
                 # 2. Automatically create the User instance in the background
                 user_instance = user.objects.create_user(
                     username=username,
-                    password=f"Stud@{username}{form.cleaned_data['admission_no']}", # Auto password (e.g., Stud@ADM123)
+                    password='zxc mnbv',  # Default password; consider prompting for a password or sending a reset link
                     role='student',
                     first_name=form.cleaned_data['first_name'],
                     last_name=form.cleaned_data['last_name']

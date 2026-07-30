@@ -16,7 +16,7 @@
 }
 
 a.card-link-wrapper {
-  text-decoration: none;
+  text-decoration: none !important;
   color: inherit;
 }
 .hover-lift {
