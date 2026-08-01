@@ -1,11 +1,12 @@
 from functools import wraps
-from django.db import transaction
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Student
 from teacher.models import Teacher
 from .forms import StudentForm
 from django.contrib.auth import get_user_model
+from django.db import transactiont
 
 user = get_user_model()
 
@@ -26,44 +27,57 @@ def index(request):
     else:
         return redirect('dashboard')
 
+
+
+User = get_user_model()  # Django ka custom/default user model fetch karne ka sahi tarika
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.db import transaction
+from classes.models import Class
+from section.models import Section
+
 @login_required
 @teacher_or_admin_required
 def create_student(request):
-    teacher_school = request.user.school if hasattr(request.user, 'school') else None
+    teacher = get_object_or_404(Teacher, user=request.user)
+    school_obj = teacher.school
+    teacher_class = teacher.class_teacher_of  # The Class object assigned to this teacher
 
     if request.method == 'POST':
-        form = StudentForm(request.POST, request.FILES, school=teacher_school)
+        # Bind both form data and uploaded files (profile picture)
+        form = StudentForm(request.POST, request.FILES, school=school_obj, teacher=teacher)
         
         if form.is_valid():
+            stu_fir_name = form.cleaned_data.get('first_name')
+            stu_las_name = form.cleaned_data.get('last_name')
+            roll_no = form.cleaned_data.get('roll_no')
+            
+            user_name = f'{stu_fir_name}' # for testing purpose, you can change this to a more unique username generation logic
+            temp_password = 'zxc mnbv'
+
             with transaction.atomic():
-                # 1. Grab the unique admission number from the form to use as the username
-                username = form.cleaned_data['first_name'] 
-                
-                # 2. Automatically create the User instance in the background
-                user_instance = user.objects.create_user(
-                    username=username,
-                    password='zxc mnbv',  # Default password; consider prompting for a password or sending a reset link
+                # 1. Create the base custom user instance
+                user_instance = User.objects.create_user(
+                    username=user_name.lower(),
+                    password=temp_password,
                     role='student',
-                    first_name=form.cleaned_data['first_name'],
-                    last_name=form.cleaned_data['last_name']
+                    first_name=stu_fir_name,
+                    last_name=stu_las_name,
                 )
                 
-                # 3. Create the student record without committing to DB yet
+                # 2. Extract and construct the Student model instance using commit=False
                 student = form.save(commit=False)
-                
-                # 4. Link the new User account to this student
                 student.user = user_instance
-                if teacher_school:
-                    student.school = teacher_school
-                
-                # 5. Save the final student record completely
+                student.school = school_obj
+                student.class_name = teacher_class
                 student.save()
-                
+            messages.success(request, "Student created successfully!")   
             return redirect('student:student_list')
     else:
-        form = StudentForm(school=teacher_school)
+        # Pass school and teacher context down to filter querysets on initial load
+        form = StudentForm(school=school_obj, teacher=teacher)
+        
     return render(request, 'student/create_student.html', {'form': form})
-
 @login_required
 @teacher_or_admin_required
 def student_list(request):

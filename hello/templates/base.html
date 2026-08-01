@@ -8,10 +8,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.rtl.min.css" integrity="sha384-CfCrinSRH2IR6a4e6fy2q6ioOX7O6Mtm1L9vRvFZ1trBncWmMePhzvafv7oIcWiW" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+/* High-performance CSS loop animation */
+.scho-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(52, 152, 219, 0.1);
+    border-radius: 50%;
+    border-top-color: #3498db;   /* Cyan highlight color matching your logo */
+    border-right-color: #1e5c8a; /* Deep blue blend */
+    animation: schoSpin 0.8s linear infinite;
+}
 
+@keyframes schoSpin {
+    to { transform: rotate(360deg); }
+}
+</style>
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
+    <div id="schobase-loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #050b14; z-index: 999999; justify-content: center; align-items: center; flex-direction: column;">
+    <!-- Circular loop mimicking a high-res GIF -->
+    <div class="scho-spinner"></div>
+    <p style="color: #3498db; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; margin-top: 25px; letter-spacing: 1.5px; font-weight: 500;">
+        SchoBase is Loading...
+    </p>
+</div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="/">
@@ -26,12 +48,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
-        </li>
+          <a class="nav-link active" aria-current="{% if request.path == '/' %}aria-current="page"{% endif %}" href="/">Home</a>
+        </li> {# I need the aria-current work properly ai fix it#}
         {% if nav_items %}
           {% for i in nav_items %}
             <li>
-              <a class="nav-link{% if request.path == i.url %} active{% endif %}" href="{{ i.url }}">{{ i.name }}</a>
+              <a class="nav-link{% if request.path == i.url %} active aria-current="page"{% endif %}" href="{{ i.url }}">{{ i.name }}</a>
             </li>
           {% endfor %}
         {% endif %}
@@ -70,11 +92,37 @@
                     {% endif %}
             </div>
             <div class="foot-bottom">
-                <p>@ 2026 Graphic Point. | All rights reserved.</p>
+                <p>@ 2026 SchoBase. | All rights reserved.</p>
             </div>
         </div>
     </footer>
+    <script>
+// 1. Show loader when a user submits any form on your site
+document.addEventListener('submit', function(event) {
+    // Avoid showing loader for asynchronous Javascript/AJAX forms if needed
+    document.getElementById('schobase-loader').style.display = 'flex';
+});
 
+// 2. Show loader when navigating to a new URL via links
+document.addEventListener('click', function(event) {
+    const targetLink = event.target.closest('a');
+    
+    // Trigger only on valid internal structural links
+    if (targetLink && 
+        targetLink.href && 
+        !targetLink.href.startsWith('#') && 
+        !targetLink.href.startsWith('javascript:') &&
+        targetLink.target !== '_blank') {
+        
+        document.getElementById('schobase-loader').style.display = 'flex';
+    }
+});
+
+// 3. Safety fallback: Hide the loader instantly if the user navigates backward/forward
+window.addEventListener('pageshow', function(event) {
+    document.getElementById('schobase-loader').style.display = 'none';
+});
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 </body>

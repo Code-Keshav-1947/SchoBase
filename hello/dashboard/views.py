@@ -55,6 +55,12 @@ def dashboard(request):
                 "url": "#",
             },
             {
+                "head":"Add Students",
+                "text":"Add the Students",
+                "status":"",
+                "url":"/student/create_student/"
+            },
+            {
                 "head": "Fees Status",
                 "text": "Preview your students fees status",
                 "status": "",

@@ -1,3 +1,6 @@
+html{
+  scroll-behavior: smooth;
+}
 .dash-n {
   font-weight: 500;
   background: linear-gradient(to right, red, blue);

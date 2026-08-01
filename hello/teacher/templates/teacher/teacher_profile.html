@@ -1,8 +1,20 @@
 {% extends "base.html" %}
-
-{% block title %}Teacher Profile{% endblock %}
-
+{% load static %}
+{% block title %}{{teacher.first_name}}- Profile{% endblock title %}
 {% block content %}
-    <h2>Teacher Profile</h2>
-    <p>This is the teacher profile page.</p>
+<div class="card m-auto my-5" style="width: 18rem">
+  <div class="card-header"><h1>Teacher Profile</h1></div>
+  <ul class="list-group list-group-flush">
+    {% if teacher.profile_pic %}
+    <li class="list-group-item">   
+        <img src="{{ teacher.profile_pic.url }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+      </li>
+      {% endif %}
+    <li class="list-group-item"><strong>Name:</strong> {{ teacher.first_name }} {{ teacher.last_name }}</li>
+    <li class="list-group-item"><strong>Class Teacher of </strong> {{ teacher.class_teacher_of.name }}</li>
+    <li class="list-group-item"><strong>School Name:</strong> {{ teacher.school }}</li>
+    <li class="list-group-item"><strong>Address:</strong> {{ teacher.address }}</li>
+    <li class="list-group-item"><strong>Phone Number:</strong> {{ teacher.phone }}</li>
+  </ul>
+</div>
 {% endblock %}

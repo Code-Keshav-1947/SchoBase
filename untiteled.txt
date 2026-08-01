@@ -1,0 +1,37 @@
+@login_required
+@teacher_or_admin_required
+def create_student(request):
+    teacher_school = request.user.school if hasattr(request.user, 'school') else None
+    current_user = request.user  # Logged-in teacher ya admin
+
+    if request.method == 'POST':
+        # Fix: 'teacher' parameter ko bhi form mein pass kiya
+        form = StudentForm(request.POST, request.FILES, school=teacher_school, teacher=current_user)
+        
+        if form.is_valid():
+            with transaction.atomic():
+                # Fix: 'first_name' ki jagah 'admission_no' ko username banaya taaki conflict na ho
+                username = form.cleaned_data['admission_no'] 
+                
+                # Automatically create the User instance
+                user_instance = User.objects.create_user(
+                    username=username,
+                    password='default_password_123',  # Security ke liye thoda strong rakhein
+                    role='student',
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
+                )
+                
+                student = form.save(commit=False)
+                student.user = user_instance
+                if teacher_school:
+                    student.school = teacher_school
+                
+                student.save()
+                
+            return redirect('student:student_list')
+    else:
+        # Fix: GET request mein bhi 'teacher' parameter pass kiya
+        form = StudentForm(school=teacher_school, teacher=current_user)
+        
+    return render(request, 'student/create_student.html', {'form': form})

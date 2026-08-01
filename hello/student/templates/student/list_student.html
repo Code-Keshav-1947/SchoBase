@@ -17,4 +17,21 @@
   </div>
 </div>
 {% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                Swal.fire({
+                    title: "Success!",
+                    text: "{{ message }}",
+                    icon: "success",
+                    draggable: true,
+                    theme: "dark",
+                });
+            {% endif %}
+        {% endfor %}
+    </script>
+{% endif %}
 {% endblock content %}
