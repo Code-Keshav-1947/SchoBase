@@ -9,7 +9,13 @@ class Teacher(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    class_teacher_of = models.ForeignKey("classes.Class",on_delete=models.CASCADE)
+    class_teacher_of = models.ManyToManyField("classes.Class", blank=True, related_name="class_teacher_of")
     school = models.ForeignKey("school.School", on_delete=models.CASCADE)
     def __str__(self):
-      return f"{self.user} - {self.class_teacher_of} - {self.school}"
+        # 1. Fetch all assigned classes and join them with commas
+        classes_list = ", ".join([str(cls) for cls in self.class_teacher_of.all()])
+        
+        # 2. Handle a fallback string if no classes are assigned yet
+        classes_str = classes_list if classes_list else "No Classes Assigned"
+        
+        return f"{self.user} - ({classes_str}) - {self.school}"

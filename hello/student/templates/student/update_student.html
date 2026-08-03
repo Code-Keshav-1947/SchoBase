@@ -4,30 +4,75 @@
 <div class="container my-5" style="max-width: 600px;">
     <h1 class="text-center mb-4">Update Student</h1>
     
-    <form method="post" class="card p-4 shadow-sm">
+    <form method="post" class="card p-4 shadow-sm" enctype="multipart/form-data">
         {% csrf_token %}
         
+        <!-- Display form validation errors globally if any exist -->
+        {% if form.errors %}
+            <div class="alert alert-danger">Please correct the fields flagged below.</div>
+        {% endif %}
+
         <div class="form-group mb-3">
-            <label for="first_name" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ student.first_name }}" required>
+            <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+            {{ form.first_name }}
+            {{ form.first_name.errors }}
         </div>
         
         <div class="form-group mb-3">
-            <label for="last_name" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ student.last_name }}">
+            <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+            {{ form.last_name }}
+            {{ form.last_name.errors }}
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="{{ form.profile_pic.id_for_label }}" class="form-label">Profile Picture</label>
+            {{ form.profile_pic }}
+            {{ form.profile_pic.errors }}
         </div>
         
         <div class="form-group mb-3">
-            <label for="admission_no" class="form-label">Admission No</label>
-            <input type="text" class="form-control" id="admission_no" name="admission_no" value="{{ student.admission_no }}" required>
+            <label for="{{ form.admission_no.id_for_label }}" class="form-label">Admission No</label>
+            {{ form.admission_no }}
+            {{ form.admission_no.errors }}
         </div>
         
-        <div class="form-group mb-4">
-            <label for="roll_no" class="form-label">Roll No</label>
-            <input type="number" class="form-control" id="roll_no" name="roll_no" value="{{ student.roll_no }}" required>
+        <div class="form-group mb-3">
+            <label for="{{ form.roll_no.id_for_label }}" class="form-label">Roll No</label>
+            {{ form.roll_no }}
+            {{ form.roll_no.errors }}
         </div>
         
-        <div class="d-flex gap-2">
+        <div class="form-group mb-3">
+            <label for="{{ form.section.id_for_label }}" class="form-label">Select Section</label>
+            {{ form.section }}
+            {{ form.section.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.gender.id_for_label }}" class="form-label">Select Gender</label>
+            {{ form.gender }}
+            {{ form.gender.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {{ form.date_of_birth.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+            {{ form.phone }}
+            {{ form.phone.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+            {{ form.address }}
+            {{ form.address.errors }}
+        </div>
+        
+        <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-primary w-100">Update Student</button>
             <a href="{% url 'student:student_list' %}" class="btn btn-outline-secondary w-100">Cancel</a>
         </div>
