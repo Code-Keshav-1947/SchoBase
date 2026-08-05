@@ -8,6 +8,7 @@ from .forms import StudentForm
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from section.models import Section
+from notification.models import Notification
 
 user = get_user_model()
 
@@ -52,7 +53,7 @@ def create_student(request):
             roll_no = form.cleaned_data.get('roll_no')
             
             # Appended roll_no to prevent IntegrityErrors with duplicate names
-            user_name = f'{stu_fir_name}_{roll_no}' 
+            user_name = f'{stu_fir_name}' 
             temp_password = 'zxc mnbv'
 
             with transaction.atomic():
@@ -71,7 +72,11 @@ def create_student(request):
                 student.save()
                 
                 form.save_m2m()  # Safe execution of form M2M data
-                
+            Notification.objects.create(
+                user=user_instance,
+                title="Welcome!",
+                message="You have been added as a student."
+            )
             messages.success(request, "Student created successfully!")   
             return redirect('student:student_list')
     else:
@@ -85,7 +90,7 @@ def student_list(request):
     # filter for a specifc class which teacher is teaching or for a specific school if the user is a school admin
     if request.user.role == 'teacher':
         teacher = get_object_or_404(Teacher, user=request.user)
-        students = Student.objects.filter(class_name=teacher.class_teacher_of)
+        students = Student.objects.filter(class_name__in=teacher.class_teacher_of.all()).order_by('roll_no')
     else:
         students = Student.objects.all()
 
@@ -112,7 +117,12 @@ def update_student(request, pk):
                 student.profile_pic = profile_pic
         section = get_object_or_404(Section, pk=request.POST.get('section'))
         student.save()
-        messages.success(request, "Student updated successfully!")  # Optional: Add a success message
+        messages.success(request, "Student updated successfully!")
+        Notification.objects.create(
+            user=student.user,
+            title="Profile Updated",
+            message="Your student profile has been updated."
+        )
         return redirect('student:student_list')
     return render(request, 'student/update_student.html', {'form': StudentForm(instance=student, school=school_obj, teacher=teacher), 'student': student})
 
@@ -123,6 +133,11 @@ def delete_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == 'POST':
         student.delete()
-        messages.success(request, "Student deleted successfully!")  # Optional: Add a success message
+        Notification.objects.create(
+            user=request.user,
+            title="Student Deleted",
+            message="Your student profile has been deleted."
+        )
+        messages.success(request, "Student deleted successfully!")  
         return redirect('student:student_list')
     return render(request, 'student/delete_student.html', {'student': student})

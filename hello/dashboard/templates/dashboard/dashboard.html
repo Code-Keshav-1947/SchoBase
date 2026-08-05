@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %} 
 {% block title %} 
-{{ request.user.username }}-Dashboard
+{{ user_name|title }}-Dashboard
 {% endblock %} 
 {% block content %}
 
