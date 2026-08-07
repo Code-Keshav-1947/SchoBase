@@ -52,7 +52,7 @@ def create_student(request):
             roll_no = form.cleaned_data.get('roll_no')
             
             # Appended roll_no to prevent IntegrityErrors with duplicate names
-            user_name = f'{stu_fir_name}_{roll_no}' 
+            user_name = f'{stu_fir_name}' 
             temp_password = 'zxc mnbv'
 
             with transaction.atomic():
@@ -82,14 +82,15 @@ def create_student(request):
 @login_required
 @teacher_or_admin_required
 def student_list(request):
-    # filter for a specifc class which teacher is teaching or for a specific school if the user is a school admin
     if request.user.role == 'teacher':
         teacher = get_object_or_404(Teacher, user=request.user)
-        students = Student.objects.filter(class_name=teacher.class_teacher_of)
+        # CHANGED: Added __in and .all() to handle the Many-to-Many field
+        students = Student.objects.filter(class_name__in=teacher.class_teacher_of.all())
     else:
         students = Student.objects.all()
 
     return render(request, 'student/list_student.html', {'students': students})
+
 
 @login_required
 @teacher_or_admin_required

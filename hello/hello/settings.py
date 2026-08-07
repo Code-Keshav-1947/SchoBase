@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'attendence',
     'classes',
     'section',
+    'notification',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,3 +157,5 @@ mimetypes.add_type("image/gif", ".gif", True)
 # Media files (Uploaded by users)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

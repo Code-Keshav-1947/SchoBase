@@ -25,6 +25,7 @@ urlpatterns = [
     path('acc/', include('accounts.urls'),name='accounts'),
     path('student/', include('student.urls'),name='student'),
     path('teacher/', include('teacher.urls'),name='teacher'),
+    path('notification/', include('notification.urls'),name='notification'),
     # path('school/', include('school.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
