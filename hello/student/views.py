@@ -8,6 +8,7 @@ from .forms import StudentForm
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from section.models import Section
+from notification.models import Notification
 
 user = get_user_model()
 
@@ -71,7 +72,10 @@ def create_student(request):
                 student.save()
                 
                 form.save_m2m()  # Safe execution of form M2M data
-                
+            Notification.objects.create(
+                user = user_instance,
+                message = 'You are successfully created as an Student!'
+            )   
             messages.success(request, "Student created successfully!")   
             return redirect('student:student_list')
     else:

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Notification{% endblock title %}
+{% block content %}
+{% if notifications %}
+<div class="container d-flex align-item-center justify-content-center flex-column my-2">
+    <h2 style="text-align: center;" class="my-2">Notifications</h2>
+    {% for notification in notifications %}
+        <div class="container" style="text-align: center;font-size: 18px;">
+            {{notification.message}}
+        </div>
+        <a href="{% url 'mrk_as_read' notification.id %}" class="btn btn-primary my-2 m-auto">Mark as read</a>
+    {% endfor %}
+</div>
+{% else %}
+    <h2  class="my-4" style="text-align: center;">No Notification Available!</h2>
+{% endif %}
+{% if notifications.count >= 2 %}
+<div class="text-center">
+    <a class ="btn btn-primary my-2" href="{% url 'delete_notification' %}">Delete All! <wa-icon name="trash"></wa-icon></a>
+</div>
+{% endif %}
+{% endblock content %}

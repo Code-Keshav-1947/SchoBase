@@ -4,13 +4,13 @@ NAV_ITEMS_BY_ROLE = {
     "student": [
         {"name": "Homework", "url": "/#"},
         {"name": "View Profile", "url": "/student"},
-        {"name": "Notification", "url": "/#"},
+        {"name": "Notification", "url": "/notification"},
     ],
     "teacher": [
         {"name": "Send Homework", "url": "/#"},
         {"name": "Attendance", "url": "/#"},
         {"name": "View Profile", "url": "/teacher"},
-        {"name": "Notification", "url": "/#"},
+        {"name": "Notification", "url": "/notification"},
     ],
     "school_admin": [
         {"name": "Manage Teachers", "url": "/#"},
