@@ -40,7 +40,7 @@ def dashboard(request):
                 "head": "Take Attendance",
                 "text": text,
                 "status": "Pending",
-                "url": "#",
+                "url": "attendance/take_attendance",
             },
             {
                 "head": "View Students",

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+Take Attendence
+{% endblock title %}
+{% block content %}
+<div style="width: fit-content;margin: auto;">
+<h2>Mark Attendance for {{ current_date }}</h2>
+
+<form method="POST" style="display: inline;">
+    {% csrf_token %}
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Roll No / ID</th>
+                <th>Student Name</th>
+                <th>Attendance Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.roll_no }}</td>
+                <td>{{ student.first_name }} {{student.last_name}}</td>
+                <td>
+                    <!-- Present Radio Button -->
+                    <label>
+                        <input type="radio" name="status_{{ student.id }}" value="P" checked> Present
+                    </label>
+                    
+                    <!-- Absent Radio Button -->
+                    <label>
+                        <input type="radio" name="status_{{ student.id }}" value="A"> Absent
+                    </label>
+                    
+                    <!-- Leave Radio Button -->
+                    <label>
+                        <input type="radio" name="status_{{ student.id }}" value="L"> Leave
+                    </label>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <br>
+    <button type="submit">Submit Attendance</button>
+</form>
+<div>
+{% endblock content %}
