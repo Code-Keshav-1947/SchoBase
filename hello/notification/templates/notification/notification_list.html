@@ -17,7 +17,7 @@
 {% endif %}
 {% if notifications.count >= 2 %}
 <div class="text-center">
-    <a class ="btn btn-primary my-2" href="{% url 'delete_notification' %}">Delete All! <wa-icon name="trash"></wa-icon></a>
+    <a class ="btn btn-danger my-2" href="{% url 'delete_notification' %}">Delete All! <wa-icon name="trash"></wa-icon></a>
 </div>
 {% endif %}
 {% endblock content %}

@@ -1,49 +1,73 @@
-{% extends "base.html" %}
-{% block title %}
-Take Attendence
-{% endblock title %}
-{% block content %}
-<div style="width: fit-content;margin: auto;">
-<h2>Mark Attendance for {{ current_date }}</h2>
+{% extends "base.html" %} 
+{% block title %} Take Attendance {% endblock title %} 
 
-<form method="POST" style="display: inline;">
-    {% csrf_token %}
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>Roll No / ID</th>
-                <th>Student Name</th>
-                <th>Attendance Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students %}
-            <tr>
-                <td>{{ student.roll_no }}</td>
-                <td>{{ student.first_name }} {{student.last_name}}</td>
-                <td>
-                    <!-- Present Radio Button -->
-                    <label>
-                        <input type="radio" name="status_{{ student.id }}" value="P" checked> Present
-                    </label>
-                    
-                    <!-- Absent Radio Button -->
-                    <label>
-                        <input type="radio" name="status_{{ student.id }}" value="A"> Absent
-                    </label>
-                    
-                    <!-- Leave Radio Button -->
-                    <label>
-                        <input type="radio" name="status_{{ student.id }}" value="L"> Leave
-                    </label>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <br>
-    <button type="submit">Submit Attendance</button>
-</form>
-<div>
+{% block content %} 
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <!-- Card Wrapper -->
+            <div class="card shadow">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white py-3">
+                    <h2 class="card-title h4 mb-0 text-center">Mark Attendance for {{ current_date }}</h2>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body p-4">
+                    <form method="POST"> 
+                        {% csrf_token %} 
+                        
+                        <!-- Responsive Table wrapper -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle"> 
+                                <thead class="table-light"> 
+                                    <tr> 
+                                        <th scope="col" style="width: 20%;">Roll No</th> 
+                                        <th scope="col" style="width: 45%;">Student Name</th> 
+                                        <th scope="col" style="width: 35%;" class="text-center">Attendance Status</th> 
+                                    </tr> 
+                                </thead> 
+                                <tbody> 
+                                    {% for student in students %} 
+                                    <tr> 
+                                        <td class="fw-semibold text-secondary">{{ student.roll_no }}</td> 
+                                        <td>{{ student.first_name }} {{ student.last_name }}</td> 
+                                        <td>
+                                            <!-- Status Radio Group wrapper -->
+                                            <div class="d-flex justify-content-center gap-3">
+                                                <!-- Present Radio Button --> 
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="status_{{ student.id }}" id="present_{{ student.id }}" value="P" checked> 
+                                                    <label class="form-check-label text-success fw-bold" for="present_{{ student.id }}">Present</label> 
+                                                </div> 
+                                                
+                                                <!-- Absent Radio Button --> 
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="status_{{ student.id }}" id="absent_{{ student.id }}" value="A"> 
+                                                    <label class="form-check-label text-danger fw-bold" for="absent_{{ student.id }}">Absent</label> 
+                                                </div> 
+                                                
+                                                <!-- Leave Radio Button --> 
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="status_{{ student.id }}" id="leave_{{ student.id }}" value="L"> 
+                                                    <label class="form-check-label text-warning fw-bold" for="leave_{{ student.id }}">Leave</label> 
+                                                </div>
+                                            </div>
+                                        </td> 
+                                    </tr> 
+                                    {% endfor %} 
+                                </tbody> 
+                            </table> 
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 shadow-sm">Submit Attendance</button> 
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
 {% endblock content %}

@@ -2,14 +2,24 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from student.models import Student
 from teacher.models import Teacher
+from attendence.models import Attendance
+from datetime import date
 # Create your views here.
 
 
 @login_required
 def dashboard(request):
     if request.user.role == "student":
-        user_name = get_object_or_404(Student, user=request.user).first_name
-        att_status = "Pending..."
+        student_prof = get_object_or_404(Student, user=request.user)
+        user_name = student_prof.first_name
+        
+        # Define status mapping dictionary
+        status_mapping = {'A': 'Absent', 'P': 'Present'}
+        
+        # Use filter().first() to avoid a 404 error if attendance isn't logged yet
+        attendance = Attendance.objects.filter(student=student_prof, date=date.today()).first()
+        att_status = status_mapping.get(attendance.status, 'Not Marked') if attendance else 'Not Marked'
+            
         fee_status = "Pending"
         cards = [
             {
@@ -27,10 +37,11 @@ def dashboard(request):
         ]
         return render(request, "dashboard/student_dashboard.html", {"cards": cards, "user_name": user_name})
     elif request.user.role == "teacher":
-        user_name = get_object_or_404(Teacher, user=request.user).first_name
-        att_status = "Pending"
+        user_ = get_object_or_404(Teacher, user=request.user)
+        user_name = user_.first_name
+        att_status = Attendance.objects.filter(marked_by = user_)
         fee_status = "Pending"
-        if att_status == "Pending":
+        if not att_status:
             text = "Take attendance for your students"
         else:
             text = "Preview your students attendance"
@@ -39,7 +50,7 @@ def dashboard(request):
             {
                 "head": "Take Attendance",
                 "text": text,
-                "status": "Pending",
+                "status": '',
                 "url": "attendance/take_attendance",
             },
             {
