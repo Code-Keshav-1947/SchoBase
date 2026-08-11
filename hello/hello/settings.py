@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'attendence',
     'classes',
     'section',
+    'subject',
+    'homework',
     'notification',
     'corsheaders',
     'api',

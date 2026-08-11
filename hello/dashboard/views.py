@@ -9,6 +9,7 @@ from datetime import date
 
 @login_required
 def dashboard(request):
+    user_role = getattr(request.user, "role", None)
     if request.user.role == "student":
         student_prof = get_object_or_404(Student, user=request.user)
         user_name = student_prof.first_name
@@ -39,18 +40,20 @@ def dashboard(request):
     elif request.user.role == "teacher":
         user_ = get_object_or_404(Teacher, user=request.user)
         user_name = user_.first_name
-        att_status = Attendance.objects.filter(marked_by = user_)
+        has_marked_attendance = Attendance.objects.filter(marked_by=user_,date = date.today()).exists()
         fee_status = "Pending"
-        if not att_status:
+        if not has_marked_attendance:
             att_url = 'attendance/take_attendance'
             text = "Take attendance for your students"
-        else:
+            head = "Take Attendance"
+        elif has_marked_attendance:
+            head = "Preview Attendance"
             att_url = 'attendance/view'
             text = "Preview your students attendance"
 
         cards = [
             {
-                "head": "Take Attendance",
+                "head": head,
                 "text": text,
                 "status": '',
                 "url": att_url,
@@ -86,4 +89,4 @@ def dashboard(request):
     elif request.user.is_staff == True:
         return redirect("/admin")
     else:
-        return redirect( login_required)
+        return redirect("/accounts/login/")
