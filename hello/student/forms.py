@@ -18,7 +18,7 @@ class StudentForm(forms.ModelForm):
             'roll_no': forms.NumberInput(attrs={'class': 'form-control'}),
             'section': forms.Select(attrs={'class': 'form-control'}),
             'gender': forms.Select(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control custom-date'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }

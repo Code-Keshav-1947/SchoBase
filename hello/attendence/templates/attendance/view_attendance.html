@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Preview Attendance{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header Card -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="display-6 fw-bold text-light">Preview Attendance</h2>
+            <p class="text-muted fs-5">
+                Class: <span class="fw-semibold text-primary">{{ class_name.name }}</span> | 
+                Date: <span class="fw-semibold">{{ date|date:"F d, Y" }}</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Attendance Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle mb-0">
+                    <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
+                        <tr>
+                            <th scope="col" class="ps-4" style="width: 15%;">Roll No.</th>
+                            <th scope="col" style="width: 55%;">Student Name</th>
+                            <th scope="col" class="text-center pe-4" style="width: 30%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <!-- Roll Number / ID -->
+                                <td class="ps-4 fw-semibold text-secondary">
+                                    {{ student.roll_no }}
+                                </td>
+                                
+                                <!-- Student Name -->
+                                <td class="fw-medium text-white">
+                                    {{ student.first_name }} {{ student.last_name }}
+                                </td>
+                                
+                                <!-- Dynamic Status Badge -->
+                                <td class="text-center pe-4">
+                                    {% if student.today_attendance.0.status == 'P' %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Present
+                                        </span>
+                                    {% elif student.today_attendance.0.status == 'A' %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                                            <i class="bi bi-x-circle-fill me-1"></i> Absent
+                                        </span>
+                                    {% elif student.today_attendance.0.status == 'L' %}
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill">
+                                            <i class="bi bi-envelope-fill me-1"></i> Leave
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill">
+                                            <i class="bi bi-clock-history me-1"></i> Pending
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">
+                                    <i class="bi bi-people fs-1 d-block mb-2"></i>
+                                    No student records found for this class.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

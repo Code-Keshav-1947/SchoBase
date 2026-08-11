@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .custom-date {
+  background-color: #212529; /* Background color */
+  border: 2px solid #3b82f6;     /* Border color */
+  border-radius: 6px;            /* Rounded corners */
+  padding: 10px;                 /* Size/Spacing */
+  color: #eee;                /* Text color */
+  font-size: 16px;
+  outline: none;
+}
+
+/* Calendar icon ka color change karne ke liye */
+.custom-date::-webkit-calendar-picker-indicator {
+  background-color: #3b82f6;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+</style>
 <div class="container my-5" style="max-width: 600px;">
     <h1 class="text-center mb-4">Create Student</h1>
     
