@@ -6,7 +6,6 @@ from attendence.models import Attendance
 from datetime import date
 # Create your views here.
 
-
 @login_required
 def dashboard(request):
     user_role = getattr(request.user, "role", None)
@@ -68,7 +67,7 @@ def dashboard(request):
                 "head": "Send Homework",
                 "text": "Send homework to your students",
                 "status": "",
-                "url": 'homework/',
+                "url": 'homework/send/',
             },
             {
                 "head":"Add Students",
