@@ -68,7 +68,7 @@ def dashboard(request):
                 "head": "Send Homework",
                 "text": "Send homework to your students",
                 "status": "",
-                "url": "#",
+                "url": 'homework/',
             },
             {
                 "head":"Add Students",

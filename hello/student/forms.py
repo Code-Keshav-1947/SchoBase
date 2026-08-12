@@ -28,8 +28,8 @@ class StudentForm(forms.ModelForm):
         school = kwargs.pop('school', None)
         teacher = kwargs.pop('teacher', None)
         super().__init__(*args, **kwargs)
-        
-        # FIX: Check if the teacher has any assigned classes using .exists()
+        self.fields['section'].empty_label = "Select Section"
+
         if teacher and teacher.class_teacher_of.exists():
             # FIX: Use __in because class_teacher_of is a Many-to-Many field
             self.fields['section'].queryset = Section.objects.filter(
