@@ -26,6 +26,8 @@ class HomeworkForm(forms.ModelForm): # Fixed forms.models to forms.ModelForm
         section = kwargs.pop('section',None)
         super().__init__(*args, **kwargs)
         
+        self.fields['subject'].empty_label = 'Select Subject'
+        
         if section:
             # Filter the queryset for the foreign key field
             self.fields['subject'].queryset = Subject.objects.filter(section=section)

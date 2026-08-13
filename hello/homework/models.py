@@ -5,7 +5,7 @@ class Homework(models.Model):
     date_assigned = models.DateTimeField()
     subject = models.ForeignKey('subject.Subject', on_delete=models.CASCADE)
     date_submitted_required = models.DateTimeField()
-    # Changed the relation string format
+    files = models.FileField(upload_to='documents/',null=True,blank=True)
     assigned_by = models.ForeignKey('teacher.Teacher', on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.subject} Homework (Assigned by: {self.assigned_by})"

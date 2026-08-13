@@ -3,12 +3,63 @@
 Send-Homework
 {% endblock %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="container my-5" style="max-width: 600px;">
+    <a href="/homework/send">#</a>
+    <h1 class="text-center mb-4">Create Student</h1>
     
-    {{ form.as_p }}
-    
-    <button type="submit">Send Homework</button>
-</form>
+    <form method="post" class="card p-4 shadow-sm" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Display form validation errors globally if any exist -->
+        {% if form.errors %}
+            <div class="alert alert-danger">Please correct the fields flagged below.</div>
+        {% endif %}
+        <div class="form-group mb-3">
+            <label for="{{ form.subject.id_for_label }}" class="form-label">Select Subject</label>
+            {{ form.subject }}
+            {{ form.subject.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.address.id_for_label }}" class="form-label">Main Body</label>
+            {{ form.body }}
+            {{ form.body.errors }}
+        </div>
 
+        <div class="form-group mb-3">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Date of Last Submission</label>
+            {{ form.date_submitted_required }}
+            {{ form.date_submitted_required.errors }}
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="{{ form.profile_pic.id_for_label }}" class="form-label">Profile Picture</label>
+            {{ form.profile_pic }}
+            {{ form.profile_pic.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.roll_no.id_for_label }}" class="form-label">Roll No</label>
+            {{ form.roll_no }}
+            {{ form.roll_no.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.gender.id_for_label }}" class="form-label">Select Gender</label>
+            {{ form.gender }}
+            {{ form.gender.errors }}
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+            {{ form.phone }}
+            {{ form.phone.errors }}
+        </div>
+        
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary w-100">Create Student</button>
+            <a href="{% url 'student:student_list' %}" class="btn btn-outline-secondary w-100">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
