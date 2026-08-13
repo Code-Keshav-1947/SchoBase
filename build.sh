@@ -10,4 +10,5 @@ cd hello
 
 # 3. Django commands chalayein
 python manage.py collectstatic --no-input
+python manage.py makemigrations
 python manage.py migrate
