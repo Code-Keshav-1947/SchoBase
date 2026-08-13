@@ -19,6 +19,8 @@ django.setup()
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='boss').exists():
-    User.objects.create_superuser('boss', 'boss@example.com', 'BossPass123')
+    user = User.objects.create_superuser('boss', 'boss@example.com', 'BossPass123',role='student')
+    user.role = 'student'
+    user.save()
     print('Superuser boss created successfully!')
 "
