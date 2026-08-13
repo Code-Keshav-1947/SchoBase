@@ -13,14 +13,15 @@ python manage.py collectstatic --no-input
 python manage.py makemigrations
 python manage.py migrate
 
+export DJANGO_SETTINGS_MODULE=hello.settings
 python -c "
 import django
 django.setup()
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='boss').exists():
-    user = User.objects.create_superuser('boss', 'boss@example.com', 'BossPass123',role='student')
-    user.role = 'student'
-    user.save()
+    User.objects.create_superuser('boss', 'boss@example.com', 'BossPass123')
     print('Superuser boss created successfully!')
+else:
+    print('Superuser boss already exists.')
 "
