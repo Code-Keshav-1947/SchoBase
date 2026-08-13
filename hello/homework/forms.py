@@ -8,7 +8,8 @@ class HomeworkForm(forms.ModelForm): # Fixed forms.models to forms.ModelForm
         fields = [
             'subject',
             'body',
-            'date_submitted_required'
+            'date_submitted_required',
+            'files'
         ]
         widgets = {
             'body': forms.Textarea(attrs={
@@ -20,7 +21,8 @@ class HomeworkForm(forms.ModelForm): # Fixed forms.models to forms.ModelForm
                 format='%Y-%m-%dT%H:%M',
                 attrs={'type': 'datetime-local', 'class': 'form-control'}
             ),
-            'subject': forms.Select(attrs={'class': 'form-control'})
+            'subject': forms.Select(attrs={'class': 'form-control'}),
+            'files':forms.FileInput(attrs={'class':'form-control'})
         }
     def __init__(self,*args, **kwargs):
         section = kwargs.pop('section',None)

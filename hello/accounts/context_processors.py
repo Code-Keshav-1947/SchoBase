@@ -7,7 +7,7 @@ NAV_ITEMS_BY_ROLE = {
         {"name": "Notification", "url": "/notification"},
     ],
     "teacher": [
-        {"name": "Send Homework", "url": "/#"},
+        {"name": "Send Homework", "url": "/homework/send"},
         {"name": "Attendance", "url": "/attendance/take_attendance"},
         {"name": "View Profile", "url": "/teacher"},
         {"name": "Notification", "url": "/notification"},
