@@ -6,7 +6,7 @@ set -o errexit
 pip install -r requirements.txt
 
 # 2. Hello folder ke andar jayein jahan manage.py hai
-cd hello
+
 
 # 3. Django commands chalayein
 python manage.py collectstatic --no-input
