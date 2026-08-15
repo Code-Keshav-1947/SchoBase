@@ -36,7 +36,7 @@ def dashboard(request):
             },
         ]
         return render(request, "dashboard/student_dashboard.html", {"cards": cards, "user_name": user_name})
-    elif request.user.role == "teacher":
+    if request.user.role == "teacher":
         user_ = get_object_or_404(Teacher, user=request.user)
         user_name = user_.first_name
         has_marked_attendance = Attendance.objects.filter(marked_by=user_,date = date.today()).exists()
@@ -83,9 +83,9 @@ def dashboard(request):
             },
         ]
         return render(request, "dashboard/teacher_dashboard.html", {"cards": cards, "user_name": user_name})
-    elif request.user.role == "school_admin":
+    if request.user.role == "school_admin":
         return render(request, "dashboard/school_admin.html")
-    elif request.user.is_staff == True:
+    if request.user.is_staff == True:
         return redirect("/admin")
     else:
         return redirect("/accounts/login/")
