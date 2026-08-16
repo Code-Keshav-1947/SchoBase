@@ -8,6 +8,8 @@ from datetime import date
 
 @login_required
 def dashboard(request):
+    if request.user.is_staff == True:
+        return redirect("/admin")
     user_role = getattr(request.user, "role", None)
     if request.user.role == "student":
         student_prof = get_object_or_404(Student, user=request.user)
@@ -85,7 +87,5 @@ def dashboard(request):
         return render(request, "dashboard/teacher_dashboard.html", {"cards": cards, "user_name": user_name})
     if request.user.role == "school_admin":
         return render(request, "dashboard/school_admin.html")
-    if request.user.is_staff == True:
-        return redirect("/admin")
     else:
         return redirect("/accounts/login/")

@@ -1,8 +1,6 @@
-
-
 NAV_ITEMS_BY_ROLE = {
     "student": [
-        {"name": "Homework", "url": "/#"},
+        {"name": "Homework", "url": "/homework"},
         {"name": "View Profile", "url": "/student"},
         {"name": "Notification", "url": "/notification"},
     ],

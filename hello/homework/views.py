@@ -1,13 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import HomeworkForm
 from teacher.models import Teacher
+from student.models import Student
 from section.models import Section
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone  
+from .models import Homework
 
 @login_required
 def ViewHomework(request):
-    return render(request, 'homework/view_homework.html')
+    if request.user.role == 'student':
+        student = get_object_or_404(Student,user= request.user)
+        section = student.section
+        homework = Homework.objects.filter(section=section)
+        return render(request, 'homework/view_homework.html',{'homework':homework })
+    if request.user.role == "teacher":
+        return render(request,'homework/view_homework.html')
 
 @login_required
 def sendHomework(request):
@@ -21,9 +29,8 @@ def sendHomework(request):
             
             # Behind the scenes values set kiye
             form_.assigned_by = teacher_prof
-            form_.date_assigned = timezone.now() # Sahi tarika timezone handle karne ka
-            
-            # CRITICAL FIX: Ise likhna zaroori hai taaki database me save ho!
+            form_.date_assigned = timezone.now() 
+            form_.section = section
             form_.save() 
             
             return redirect('view homework')

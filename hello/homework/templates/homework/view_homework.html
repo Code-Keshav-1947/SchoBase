@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}View Homework{% endblock %}
+
+{% block content %}
+<!-- Custom Premium Dark Theme Styles Injection -->
+<style>
+    body {
+        background-color: #0f172a; /* Rich Premium Dark Slate Background */
+        color: #f8fafc;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .dashboard-header {
+        background: linear-gradient(135deg, #312e81 0%, #5b21b6 100%); /* Deep Indigo to Deep Purple Gradient */
+        border-radius: 1.25rem;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .homework-card {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background-color: #1e293b; /* Sleek Dark Card Background */
+    }
+
+    .homework-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .subject-badge {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        padding: 0.5rem 1rem;
+        border-radius: 50rem;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+        color: #c084fc; /* Soft purple color readable on dark surfaces */
+        display: inline-block;
+    }
+
+    .card-footer-custom {
+        background-color: #0f172a; /* Dark footer to match layout contrast */
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        border-bottom-left-radius: 1.25rem;
+        border-bottom-right-radius: 1.25rem;
+    }
+
+    .empty-state-icon {
+        font-size: 3.5rem;
+        background: linear-gradient(135deg, #475569 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<div class="container py-5">
+    <!-- Premium Welcome/Header Banner -->
+    <div class="dashboard-header text-white p-4 p-md-5 mb-5 d-flex align-items-center justify-content-between position-relative overflow-hidden">
+        <div class="position-relative z-1">
+            <span class="badge bg-white/10 text-white mb-2 px-3 py-2 rounded-pill fw-semibold backdrop-blur" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
+                Student Portal
+            </span>
+            <h1 class="display-6 fw-bold mb-1">Your Homework Desk</h1>
+            <p class="mb-0 text-white-50">Stay on track with your recent school assignments and active deadlines.</p>
+        </div>
+        <div class="d-none d-md-block opacity-25">
+            <i class="bi bi-journal-bookmark" style="font-size: 6rem;"></i>
+        </div>
+    </div>
+
+    <!-- Responsive Card Grid Setup -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for home in homework %}
+        <div class="col">
+            <div class="card homework-card h-100 d-flex flex-column justify-content-between shadow-sm">
+                
+                <!-- Card Header Area with Decorative Elements -->
+                <div class="p-4 pb-0">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="subject-badge">
+                            <i class="bi bi-book-half me-1"></i> {{ home.subject.name }}
+                        </div>
+                        <span class="text-warning animate-pulse">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </span>
+                    </div>
+                    
+                    <!-- Content Core Block -->
+                    <div class="homework-body">
+                        <p class="card-text lh-relaxed" style="font-size: 0.95rem; color: #cbd5e1;">
+                            {{ home.body }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Styled Footer Element with Clean Metadata -->
+                <div class="card-footer-custom p-4 mt-4 d-flex align-items-center justify-content-between small">
+                    <div class="d-flex align-items-center text-white-50">
+                        <i class="bi bi-calendar3 me-2 text-info"></i>
+                        <span>Assigned</span>
+                    </div>
+                    <span class="fw-medium text-light px-2 py-1 rounded " style="background-color: #334155 !important;">
+                        {{home.date_assigned}}
+                    </span>
+                </div>
+                
+            </div>
+        </div>
+        {% empty %}
+        <!-- Polished Empty-State Scenario Fallback Component -->
+        <div class="col-12 text-center py-5 my-4">
+            <div class="card border-0 bg-transparent">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-check2-circle empty-state-icon"></i>
+                    </div>
+                    <h3 class="fw-bold text-light">All Caught Up!</h3>
+                    <p class="mx-auto" style="max-width: 400px; color: #94a3b8 !important;">
+                        No pending homework assignments found for your current tracks. Enjoy your free time!
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
