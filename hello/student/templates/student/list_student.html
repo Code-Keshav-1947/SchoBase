@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block title %}
+List of Students
+{% endblock title %}
 {% block content %}
 <div class="container mt-4">
     <a href="{% url 'student:create_student' %}" class="btn btn-success m-auto d-block mb-3">Add Student</a>
