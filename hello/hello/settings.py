@@ -93,12 +93,16 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-# Database configuration – use Neon PostgreSQL when DATABASE_URL is set.
-# The django_neon engine handles SSL session reuse and built‑in connection pooling.
-# A modest CONN_MAX_AGE (30 seconds) keeps connections alive without exhausting Neon’s limits   .
+
 if os.getenv('DATABASE_URL'):
+    # Note: Ensure your DATABASE_URL environment variable has '-pooler' in it.
     DATABASES = {
-        'default': dj_database_url.config(conn_max_age=30, ssl_require=True)
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,  # 10 minutes (Optimal for Serverless + Pooler)
+            conn_health_checks=True, # Ensure connection isn't broken
+            ssl_require=True
+        )
     }
 else:
     DATABASES = {
@@ -107,7 +111,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 
 # Password validation
