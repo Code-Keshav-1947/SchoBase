@@ -105,11 +105,9 @@ if os.environ.get('DATABASE_URL'):
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
             'CONN_MAX_AGE': 30,
             # Optional pooling options (Neon defaults are usually fine):
-            # 'OPTIONS': {'pool_size': 10, 'max_overflow': 5},
         }
     }
 else:
-    # Fallback to SQLite for local development.
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
