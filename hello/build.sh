@@ -9,7 +9,7 @@ pip install -r requirements.txt
 
 
 # 3. Django commands chalayein
-python manage.py collectstatic --no-input
+python manage.py collectstatic --noinput
 python manage.py makemigrations
 python manage.py migrate
 
