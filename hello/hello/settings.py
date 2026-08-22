@@ -105,7 +105,6 @@ if os.environ.get('DATABASE_URL'):
             'HOST': os.getenv('POSTGRES_HOST'),
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
             'CONN_MAX_AGE': 30,
-            # Optional pooling options (Neon defaults are usually fine):
         }
     }
 else:
