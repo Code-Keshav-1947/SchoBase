@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 import pathlib
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
@@ -95,17 +96,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Database configuration – use Neon PostgreSQL when DATABASE_URL is set.
 # The django_neon engine handles SSL session reuse and built‑in connection pooling.
 # A modest CONN_MAX_AGE (30 seconds) keeps connections alive without exhausting Neon’s limits   .
-if os.environ.get('DATABASE_URL'):
+if os.getenv('DATABASE_URL'):
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT', '5432'),
-            'CONN_MAX_AGE': 30,
-        }
+        'default': dj_database_url.config(conn_max_age=30, ssl_require=True)
     }
 else:
     DATABASES = {
