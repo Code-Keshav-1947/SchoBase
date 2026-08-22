@@ -23,8 +23,13 @@ def teacher_or_admin_required(view_func):
 
 @login_required
 def index(request):
-    if request.user.role == 'student':
-        student = get_object_or_404(Student, user=request.user)
+    user_role = getattr(request.user, "role", None)
+    if request.user.role == "student":
+        # Pull related fields in one query (school, class, section) to avoid extra DB hits
+        student = (
+            Student.objects.select_related('school', 'class_name', 'section')
+            .get(user=request.user)
+        )
         return render(request, 'student/student_profile.html', {'student': student})
     else:
         return redirect('dashboard')
@@ -88,10 +93,13 @@ def create_student(request):
 def student_list(request):
     if request.user.role == 'teacher':
         teacher = get_object_or_404(Teacher, user=request.user)
-        # CHANGED: Added __in and .all() to handle the Many-to-Many field
-        students = Student.objects.filter(class_name__in=teacher.class_teacher_of.all())
+        # CHANGED: Fetch related FK fields in a single query to avoid N+1
+        students = (
+            Student.objects.filter(class_name__in=teacher.class_teacher_of.all())
+            .select_related('class_name', 'school', 'section')
+        )
     else:
-        students = Student.objects.all()
+        students = Student.objects.all().select_related('class_name', 'school', 'section')
 
     return render(request, 'student/list_student.html', {'students': students})
 
