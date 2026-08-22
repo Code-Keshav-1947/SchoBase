@@ -94,11 +94,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 # Database configuration – use Neon PostgreSQL when DATABASE_URL is set.
 # The django_neon engine handles SSL session reuse and built‑in connection pooling.
-# A modest CONN_MAX_AGE (30 seconds) keeps connections alive without exhausting Neon’s limits.
+# A modest CONN_MAX_AGE (30 seconds) keeps connections alive without exhausting Neon’s limits   .
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': {
-            'ENGINE': 'django_neon',
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('POSTGRES_DB'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
