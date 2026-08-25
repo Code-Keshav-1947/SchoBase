@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from student.models import Student
 from teacher.models import Teacher
+from school_admin.models import Adminstrators
+from classes.models import Class
 from attendence.models import Attendance
 from datetime import date
 # Create your views here.
@@ -11,7 +13,7 @@ def dashboard(request):
     if request.user.is_staff == True:
         return redirect("/admin")
     user_role = getattr(request.user, "role", None)
-    if request.user.role == "student":
+    if request.user.role == "student" and request.user.is_active == True:
         student_prof = get_object_or_404(Student, user=request.user)
         user_name = student_prof.first_name
         
@@ -38,7 +40,7 @@ def dashboard(request):
             },
         ]
         return render(request, "dashboard/student_dashboard.html", {"cards": cards, "user_name": user_name})
-    if request.user.role == "teacher":
+    if request.user.role == "teacher" and request.user.is_active == True:
         user_ = get_object_or_404(Teacher, user=request.user)
         user_name = user_.first_name
         has_marked_attendance = Attendance.objects.filter(marked_by=user_,date = date.today()).exists()
@@ -81,11 +83,69 @@ def dashboard(request):
                 "head": "Fees Status",
                 "text": "Preview your students fees status",
                 "status": "",
-                "url": "#",
+                "url": "",
             },
         ]
         return render(request, "dashboard/teacher_dashboard.html", {"cards": cards, "user_name": user_name})
-    if request.user.role == "school_admin":
-        return render(request, "dashboard/school_admin.html")
+    if request.user.role == "school_admin" and request.user.is_active == True:
+        admin = get_object_or_404(Adminstrators, user= request.user)
+        user_name = admin.name
+        cards = [
+            {
+                'head':'Total Students',
+                'text':'Students in the school are ',
+                'status':Student.objects.filter(school=admin.school).count(),
+                'url':'/student/list_students/'
+            },
+            {
+                'head':'Total Teachers',
+                'text':'Teachers in the school are ',
+                'status':Teacher.objects.filter(school=admin.school).count(),
+                'url':'/teacher/list_teachers/'
+            },
+            {
+                "head": "Total Classes",
+                "text": "Classes in the school are ",
+                "status":Class.objects.filter(school=admin.school).count(),
+                "url": "/classes/list_classes/",
+            },
+            {
+                "head": "Add Class",
+                "text": "Add Class",
+                "status": "",
+                "url": "/class/create_class/",
+            },
+            {
+                "head": "Add Teacher",
+                "text": "Add Teacher",
+                "status": "",
+                "url": "/teacher/create_teacher/",
+            },
+            {
+                "head": "Add Student",
+                "text": "Add Student",
+                "status": "",
+                "url": "/student/create_student/",
+            },
+            {
+                "head": "View Teachers",
+                "text": "View Teachers",
+                "status": "",
+                "url": "/teacher/list_teachers/",
+            },
+            {
+                "head": "Classes",
+                "text": "View Classes",
+                "status": "",
+                "url": "/classes/list_classes/",
+            },
+            {
+                "head": "View Students",
+                "text": "View Students",
+                "status": "",
+                "url": "/student/view_students/",
+            },
+        ]
+        return render(request, "dashboard/school_admin.html", {"user_name": user_name, "cards": cards})
     else:
         return redirect("/accounts/login/")

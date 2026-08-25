@@ -1,4 +1,3 @@
 {
-    "python.REPL.enableREPLSmartSend": false,
-    "djlint.showInstallError": false
+    "python.REPL.enableREPLSmartSend": false
 }

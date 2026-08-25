@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'dashboard',
     'accounts',
     'school',
+    'school_admin',
     'teacher',
     'student',
     'attendence',

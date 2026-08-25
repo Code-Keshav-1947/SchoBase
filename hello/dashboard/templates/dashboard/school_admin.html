@@ -1,1 +1,25 @@
 {% extends "dashboard/dashboard.html" %}
+{% load static %}
+{% block title %}
+School Adminstrator Dashboard
+{% endblock %}
+{% block extra %}
+
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+    {% for card in cards %}
+    <div class="col" style="max-width: 22rem;">
+      <a href="{{ card.url }}" class="card-link-wrapper d-block h-100">
+        <div class="card text-bg-primary h-100 shadow-sm hover-lift">
+          <div class="card-header border-bottom border-light border-opacity-25">{{ card.head }}</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ card.head }}</h5>
+            <p class="card-text">{{ card.text }} {{ card.status }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock extra %}
