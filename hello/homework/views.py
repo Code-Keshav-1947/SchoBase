@@ -6,6 +6,7 @@ from section.models import Section
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone  
 from .models import Homework
+from school_admin.models import Adminstrators
 
 @login_required
 def ViewHomework(request):
@@ -15,7 +16,13 @@ def ViewHomework(request):
         homework = Homework.objects.filter(section=section)
         return render(request, 'homework/view_homework.html',{'homework':homework })
     if request.user.role == "teacher":
-        return render(request,'homework/view_homework.html')
+        homework = Homework.objects.filter(assigned_by=request.user.teacher)
+        return render(request,'homework/view_homework.html',{'homework':homework })
+    if request.user.role == "school_admin":
+        school = get_object_or_404(Adminstrators,user=request.user).school
+        sections = Section.objects.filter(school=school)
+        homework = Homework.objects.filter(section__in=sections)
+        return render(request,'homework/view_homework.html',{'homework':homework })
 
 @login_required
 def sendHomework(request):

@@ -1,40 +1,160 @@
 {% extends "base.html" %}
-{% block title %}
-List of Students
-{% endblock title %}
-{% block content %}
-<div class="container mt-4">
-    <a href="{% url 'student:create_student' %}" class="btn btn-success m-auto d-block mb-3">Add Student</a>
-    <h1 class="m-auto h1 text-center my-4">Student List</h1>
-    {% for student in students %}
-    <div class="card m-auto mb-3" style="width: 18rem;">
-        <div class="card-body">
-            <strong>{{ student.first_name }} {{ student.last_name }}</strong>
-        <p class="card-text">Roll No: {{ student.roll_no }}</p>
-        <p class="card-text">Class: {{ student.class_name.name }}</p>
-        <p class="card-text">Section: {{ student.section.name }}</p>
-        <div class="btn-group" role="group">
-            <a href="{% url 'student:update_student' student.id %}" class="btn btn-primary">Edit</a>
-            <a href="{% url 'student:delete_student' student.id %}" class="btn btn-danger">Delete</a>
-        </div>
-  </div>
-</div>
-{% endfor %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% load static %}
 
+{% block title %}
+Student Directory | SchoBase
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid px-lg-5 py-4">
+
+  <!-- Header & Actions -->
+  <div class="scho-glass-card p-4 mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <h2 class="h3 fw-bold mb-0 text-white">Student Roster</h2>
+          <span class="scho-badge scho-badge-primary">{{ students|length }} Enrolled</span>
+        </div>
+        <p class="text-secondary mb-0 small">Comprehensive directory of enrolled learners with profile management</p>
+      </div>
+
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="scho-search-box" style="min-width: 250px;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="studentSearchInput" class="form-control scho-search-input" placeholder="Search by name, roll, or class..." onkeyup="filterStudents()">
+        </div>
+
+        {% if request.user.role == 'teacher' or request.user.role == 'school_admin' %}
+        <a href="{% url 'student:create_student' %}" class="btn btn-primary d-inline-flex align-items-center gap-2 fw-semibold">
+          <i class="fa-solid fa-user-plus"></i> Enroll Student
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Students Grid / Table -->
+  <div class="scho-glass-card p-4">
+    <div class="table-responsive">
+      <table class="scho-table" id="studentTable">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Admission No</th>
+            <th>Class & Section</th>
+            <th>Roll No</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr class="student-row">
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                {% if student.profile_pic %}
+                  <img src="{{ student.profile_pic.url }}" alt="{{ student.first_name }}" class="scho-student-avatar">
+                {% else %}
+                  <div class="scho-student-avatar">
+                    {{ student.first_name|slice:":1"|upper }}{{ student.last_name|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+                <div>
+                  <strong class="text-white d-block student-name">{{ student.first_name }} {{ student.last_name }}</strong>
+                  <small class="text-secondary">{{ student.school.school_name }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="text-info font-monospace student-adm">{{ student.admission_no }}</span>
+            </td>
+            <td>
+              <span class="scho-badge scho-badge-primary student-class">
+                {{ student.class_name.name }} - Sec {{ student.section.name }}
+              </span>
+            </td>
+            <td>
+              <span class="text-white fw-bold student-roll">#{{ student.roll_no }}</span>
+            </td>
+            <td>
+              <span class="text-secondary">{{ student.gender|title }}</span>
+            </td>
+            <td>
+              {% if student.phone %}
+                <span class="text-secondary small"><i class="fa-solid fa-phone me-1 text-success"></i>{{ student.phone }}</span>
+              {% else %}
+                <span class="text-muted small fst-italic">—</span>
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm">
+                <a href="{% url 'student:update_student' student.id %}" class="btn btn-outline-primary" title="Edit Student">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>
+                <a href="{% url 'student:delete_student' student.id %}" class="btn btn-outline-danger" title="Delete Student">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-secondary py-5">
+              <i class="fa-solid fa-user-slash fa-3x mb-3 text-muted d-block"></i>
+              No students found in the registry.
+              {% if request.user.role == 'teacher' or request.user.role == 'school_admin' %}
+              <div class="mt-2">
+                <a href="{% url 'student:create_student' %}" class="btn btn-sm btn-primary">
+                  <i class="fa-solid fa-user-plus me-1"></i> Enroll Student
+                </a>
+              </div>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Real-time Filter JS -->
+<script>
+function filterStudents() {
+  const query = document.getElementById('studentSearchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#studentTable .student-row');
+  
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (text.includes(query)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% if messages %}
-    <script>
-        {% for message in messages %}
-            {% if message.tags == 'success' %}
-                Swal.fire({
-                    title: "Success!",
-                    text: "{{ message }}",
-                    icon: "success",
-                    draggable: true,
-                    theme: "dark",
-                });
-            {% endif %}
-        {% endfor %}
-    </script>
+<script>
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            Swal.fire({
+                title: "Success!",
+                text: "{{ message }}",
+                icon: "success",
+                draggable: true,
+                theme: "dark",
+                background: "#0f172a",
+                color: "#f8fafc",
+                confirmButtonColor: "#38bdf8"
+            });
+        {% endif %}
+    {% endfor %}
+</script>
 {% endif %}
 {% endblock content %}

@@ -1,20 +1,21 @@
 NAV_ITEMS_BY_ROLE = {
     "student": [
-        {"name": "Homework", "url": "/homework"},
-        {"name": "View Profile", "url": "/student"},
-        {"name": "Notification", "url": "/notification"},
+        {"name": "Homework", "url": "/homework/"},
+        {"name": "View Profile", "url": "/student/"},
+        {"name": "Notification", "url": "/notification/"},
     ],
     "teacher": [
-        {"name": "Send Homework", "url": "/homework/send"},
-        {"name": "Attendance", "url": "/attendance/take_attendance"},
-        {"name": "View Profile", "url": "/teacher"},
-        {"name": "Notification", "url": "/notification"},
+        {"name": "Send Homework", "url": "/homework/send/"},
+        {"name": "Attendance", "url": "/attendance/take_attendance/"},
+        {"name": "View Profile", "url": "/teacher/"},
+        {"name": "Notification", "url": "/notification/"},
     ],
     "school_admin": [
-        {"name": "Manage Teachers", "url": "/#"},
-        {"name": "Manage Students", "url": "/#"},
-        {"name": "View Profile", "url": "/#"},
-        {"name": "Notification", "url": "/#"},
+        {"name": "Students Roster", "url": "/student/list_students/"},
+        {"name": "Faculty Staff", "url": "/teacher/list_teachers/"},
+        {"name": "Add Student", "url": "/student/create_student/"},
+        {"name": "Attendance Logs", "url": "/attendance/view/"},
+        {"name": "Notification", "url": "/notification/"},
     ],
 }
 
@@ -25,3 +26,4 @@ def nav_items(request):
 
     role = getattr(request.user, "role", None)
     return {"nav_items": NAV_ITEMS_BY_ROLE.get(role, [])}
+

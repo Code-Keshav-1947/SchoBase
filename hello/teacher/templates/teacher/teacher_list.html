@@ -1,0 +1,112 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %} Faculty Staff Directory | SchoBase {% endblock %} 
+
+{% block content %} 
+<div class="container-fluid px-lg-5 py-4"> 
+
+    <!-- Section Header -->
+    <div class="scho-glass-card p-4 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h2 class="h3 fw-bold mb-0 text-white">Faculty Directory</h2>
+                    <span class="scho-badge scho-badge-success">{{ teachers|length }} Faculty Members</span>
+                </div>
+                <p class="text-secondary mb-0 small">Registered teaching staff and class teacher assignments</p>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="scho-search-box" style="min-width: 250px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="teacherSearchInput" class="form-control scho-search-input" placeholder="Search teacher by name..." onkeyup="filterTeachers()">
+                </div>
+                <a href="/admin/teacher/teacher/add/" target="_blank" class="btn btn-primary d-inline-flex align-items-center gap-2 fw-semibold">
+                    <i class="fa-solid fa-user-plus"></i> Add Teacher
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="row g-4" id="teacherCardsGrid"> 
+        {% for teacher in teachers %} 
+        <div class="col-12 col-md-6 col-lg-4 teacher-card-col"> 
+            <div class="scho-glass-card h-100 p-4 d-flex flex-column hover-lift"> 
+                
+                <!-- Avatar & Name -->
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="scho-kpi-icon scho-icon-emerald" style="width: 52px; height: 52px; font-size: 1.3rem;">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold text-white mb-0 teacher-name">
+                            {{ teacher.first_name }} {{ teacher.last_name }}
+                        </h5>
+                        <small class="text-info">{{ teacher.school.school_name }}</small>
+                    </div>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="my-3 flex-grow-1">
+                    <div class="d-flex align-items-center mb-2 text-secondary small">
+                        <i class="fa-solid fa-phone text-primary me-2" style="width: 16px;"></i>
+                        <span class="text-white">{% if teacher.phone %}{{ teacher.phone }}{% else %}<em class="text-muted">Not provided</em>{% endif %}</span>
+                    </div>
+                    <div class="d-flex align-items-start text-secondary small">
+                        <i class="fa-solid fa-location-dot text-danger me-2 mt-1" style="width: 16px;"></i>
+                        <span class="text-secondary">{% if teacher.address %}{{ teacher.address }}{% else %}<em class="text-muted">Not specified</em>{% endif %}</span>
+                    </div>
+                </div>
+
+                <!-- Assigned Classes Info Box -->
+                <div class="mt-auto border-top border-secondary border-opacity-25 pt-3">
+                    <span class="text-secondary small fw-semibold d-block mb-1">Class Teacher Of:</span>
+                    {% if teacher.class_teacher_of.all %} 
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for cls in teacher.class_teacher_of.all %}
+                                <span class="scho-badge scho-badge-primary">
+                                    <i class="fa-solid fa-chalkboard me-1"></i> {{ cls.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %} 
+                        <span class="text-muted small fst-italic">No class assigned</span>
+                    {% endif %}
+                </div>
+
+            </div> 
+        </div> 
+        {% empty %}
+        <div class="col-12">
+            <div class="scho-glass-card p-5 text-center text-secondary">
+                <i class="fa-solid fa-user-xmark fa-3x mb-3 text-muted d-block"></i>
+                <h5>No teachers found in the registry.</h5>
+                <p class="small text-muted">Register teachers to assign them as class teachers.</p>
+                <a href="/admin/teacher/teacher/add/" target="_blank" class="btn btn-sm btn-primary mt-2">
+                    <i class="fa-solid fa-plus me-1"></i> Add Teacher in Admin
+                </a>
+            </div>
+        </div>
+        {% endfor %} 
+    </div> 
+</div> 
+
+<script>
+function filterTeachers() {
+  const query = document.getElementById('teacherSearchInput').value.toLowerCase();
+  const cols = document.querySelectorAll('#teacherCardsGrid .teacher-card-col');
+  
+  cols.forEach(col => {
+    const text = col.innerText.toLowerCase();
+    if (text.includes(query)) {
+      col.style.display = '';
+    } else {
+      col.style.display = 'none';
+    }
+  });
+}
+</script>
+
+{% endblock content %}

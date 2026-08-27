@@ -35,8 +35,14 @@ class StudentForm(forms.ModelForm):
             self.fields['section'].queryset = Section.objects.filter(
                 class_name__in=teacher.class_teacher_of.all()
             ).order_by('name')
+        elif school:
+            # School Admin: show all sections belonging to the school
+            self.fields['section'].queryset = Section.objects.filter(
+                school=school
+            ).order_by('class_name__name', 'name')
         else:
             self.fields['section'].queryset = Section.objects.none()
+
 
 
 # 2. Update Form inherits directly from StudentForm

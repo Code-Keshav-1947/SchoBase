@@ -1,25 +1,583 @@
-{% extends "dashboard/dashboard.html" %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}
-School Adminstrator Dashboard
-{% endblock %}
-{% block extra %}
 
-<div class="container my-5">
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
-    {% for card in cards %}
-    <div class="col" style="max-width: 22rem;">
-      <a href="{{ card.url }}" class="card-link-wrapper d-block h-100">
-        <div class="card text-bg-primary h-100 shadow-sm hover-lift">
-          <div class="card-header border-bottom border-light border-opacity-25">{{ card.head }}</div>
-          <div class="card-body">
-            <h5 class="card-title">{{ card.head }}</h5>
-            <p class="card-text">{{ card.text }} {{ card.status }}</p>
+{% block title %}
+{{ school.school_name }} — Admin Command Center | SchoBase
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid px-3 px-sm-4 px-lg-5 py-3 py-md-4">
+
+  <!-- =========================================================================
+       1. Executive School Admin Header Banner (Mobile Optimized)
+       ========================================================================= -->
+  <div class="scho-admin-banner mb-4">
+    <div class="row align-items-center g-3">
+      <div class="col-lg-8">
+        <div class="d-flex align-items-start gap-3">
+          <div class="scho-avatar-ring">
+            {{ school.school_name|slice:":2"|upper }}
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+              <h1 class="h3 fw-bold mb-0 text-white" style="font-size: clamp(1.25rem, 4vw, 1.75rem); word-break: break-word;">
+                {{ school.school_name }}
+              </h1>
+              <span class="scho-badge scho-badge-primary">
+                <i class="fa-solid fa-certificate me-1"></i> {{ school.school_board }}
+              </span>
+              <span class="scho-badge scho-badge-success">
+                <i class="fa-solid fa-shield-check me-1"></i> Active
+              </span>
+            </div>
+            <p class="text-secondary mb-2 small">
+              Welcome back, <strong class="text-white">{{ admin.name }}</strong> (Administrator) 👋
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="scho-chip">
+                <i class="fa-regular fa-calendar text-info"></i> {{ today|date:"D, M d, Y" }}
+              </span>
+              {% if school.conatact_number %}
+              <span class="scho-chip">
+                <i class="fa-solid fa-phone text-success"></i> {{ school.conatact_number }}
+              </span>
+              {% endif %}
+              {% if school.email %}
+              <span class="scho-chip">
+                <i class="fa-solid fa-envelope text-warning"></i> {{ school.email }}
+              </span>
+              {% endif %}
+              {% if school.address %}
+              <span class="scho-chip">
+                <i class="fa-solid fa-location-dot text-danger"></i> {{ school.address }}
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end mt-2 mt-lg-0">
+          <a href="{% url 'student:create_student' %}" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold shadow-sm flex-grow-1 flex-sm-grow-0 justify-content-center">
+            <i class="fa-solid fa-user-plus"></i> Enroll Student
+          </a>
+          <a href="/attendance/view/" class="btn btn-outline-info d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold flex-grow-1 flex-sm-grow-0 justify-content-center">
+            <i class="fa-solid fa-clipboard-check"></i> Attendance
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. KPI Metrics Grid (6 Key Institutional Indicators - No Text Clipping)
+       ========================================================================= -->
+  <div class="row g-2 g-md-3 mb-4">
+    <!-- Total Students -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="{% url 'student:student_list' %}" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-cyan hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Students</span>
+            <div class="scho-kpi-icon scho-icon-cyan">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ stats.students }}</div>
+          <div class="scho-kpi-subtext">
+            <i class="fa-solid fa-arrow-trend-up text-info me-1"></i> Learners
           </div>
         </div>
       </a>
     </div>
-    {% endfor %}
+
+    <!-- Total Teachers -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="/teacher/list_teachers/" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-emerald hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Teachers</span>
+            <div class="scho-kpi-icon scho-icon-emerald">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ stats.teachers }}</div>
+          <div class="scho-kpi-subtext">
+            <i class="fa-solid fa-users text-success me-1"></i> Faculty
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Classes & Sections -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="/admin/classes/class/" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-violet hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Classes</span>
+            <div class="scho-kpi-icon scho-icon-violet">
+              <i class="fa-solid fa-school"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ stats.classes }}</div>
+          <div class="scho-kpi-subtext">
+            <span class="text-secondary">{{ stats.sections }} Sections</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Today's Attendance Rate -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="/attendance/view/" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-blue hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Attendance</span>
+            <div class="scho-kpi-icon scho-icon-blue">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ attendance.rate }}%</div>
+          <div class="scho-kpi-subtext">
+            <span class="text-success">{{ attendance.present }}</span> / {{ stats.students }} Present
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Academic Subjects -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="/admin/subject/subject/" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-amber hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Subjects</span>
+            <div class="scho-kpi-icon scho-icon-amber">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ stats.subjects }}</div>
+          <div class="scho-kpi-subtext">
+            <span class="text-warning">Curriculum</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Active Homework -->
+    <div class="col-6 col-md-4 col-xl-2">
+      <a href="/homework/" class="card-link-wrapper h-100">
+        <div class="scho-glass-card scho-kpi-card scho-kpi-rose hover-lift">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="scho-kpi-label">Assignments</span>
+            <div class="scho-kpi-icon scho-icon-rose">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+          </div>
+          <div class="scho-kpi-value">{{ stats.homework }}</div>
+          <div class="scho-kpi-subtext">
+            <span class="text-danger">Tasks</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. Today's Attendance Intelligence Bar
+       ========================================================================= -->
+  <div class="scho-glass-card p-3 p-md-4 mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+      <div>
+        <h2 class="h5 fw-bold mb-1 text-white">
+          <i class="fa-solid fa-chart-simple text-info me-2"></i> Attendance Intelligence
+        </h2>
+        <span class="text-secondary small">
+          Tracking status across active classes for {{ today|date:"M d, Y" }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="scho-badge scho-badge-primary">
+          {{ attendance.rate }}% Present
+        </span>
+        <a href="/attendance/view/" class="btn btn-sm btn-outline-light">
+          Logs <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Segmented Visual Bar -->
+    <div class="scho-attendance-bar">
+      {% if stats.students > 0 %}
+        <div class="scho-bar-seg scho-bar-present" style="width: {{ attendance.present_pct }}%;" title="Present: {{ attendance.present }} ({{ attendance.present_pct }}%)"></div>
+        <div class="scho-bar-seg scho-bar-absent" style="width: {{ attendance.absent_pct }}%;" title="Absent: {{ attendance.absent }} ({{ attendance.absent_pct }}%)"></div>
+        <div class="scho-bar-seg scho-bar-leave" style="width: {{ attendance.leave_pct }}%;" title="Leave: {{ attendance.leave }} ({{ attendance.leave_pct }}%)"></div>
+        <div class="scho-bar-seg scho-bar-pending" style="width: {{ attendance.pending_pct }}%;" title="Not Marked: {{ attendance.pending }} ({{ attendance.pending_pct }}%)"></div>
+      {% else %}
+        <div class="scho-bar-seg scho-bar-pending" style="width: 100%;"></div>
+      {% endif %}
+    </div>
+
+    <!-- Status Legend Counters -->
+    <div class="row g-2 pt-1 text-center">
+      <div class="col-6 col-sm-3">
+        <div class="p-2 rounded bg-dark bg-opacity-50">
+          <span class="scho-stat-dot dot-present"></span>
+          <span class="text-secondary small">Present:</span>
+          <strong class="text-white ms-1">{{ attendance.present }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-sm-3">
+        <div class="p-2 rounded bg-dark bg-opacity-50">
+          <span class="scho-stat-dot dot-absent"></span>
+          <span class="text-secondary small">Absent:</span>
+          <strong class="text-white ms-1">{{ attendance.absent }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-sm-3">
+        <div class="p-2 rounded bg-dark bg-opacity-50">
+          <span class="scho-stat-dot dot-leave"></span>
+          <span class="text-secondary small">Leave:</span>
+          <strong class="text-white ms-1">{{ attendance.leave }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-sm-3">
+        <div class="p-2 rounded bg-dark bg-opacity-50">
+          <span class="scho-stat-dot dot-pending"></span>
+          <span class="text-secondary small">Pending:</span>
+          <strong class="text-white ms-1">{{ attendance.pending }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       4. Two-Column Dashboard Hub (Classes Roster & Management Tools)
+       ========================================================================= -->
+  <div class="row g-3 g-md-4">
+    
+    <!-- Left Column (7/12) -->
+    <div class="col-lg-7">
+      
+      <!-- Academic Classes & Sections Roster -->
+      <div class="scho-glass-card p-3 p-md-4 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <div>
+            <h2 class="h5 fw-bold mb-1 text-white">
+              <i class="fa-solid fa-layer-group text-primary me-2"></i> Academic Classes & Sections
+            </h2>
+            <span class="text-secondary small">Grades, sections, and assigned teachers</span>
+          </div>
+          <div class="scho-search-box" style="max-width: 260px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="classSearchInput" class="form-control scho-search-input" placeholder="Search class..." onkeyup="filterClasses()">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="scho-table" id="classesTable">
+            <thead>
+              <tr>
+                <th>Class / Grade</th>
+                <th>Sections & Class Teachers</th>
+                <th>Enrolled</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in classes_roster %}
+              <tr class="class-row">
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="scho-kpi-icon scho-icon-violet" style="width: 32px; height: 32px; font-size: 0.85rem;">
+                      <i class="fa-solid fa-chalkboard"></i>
+                    </div>
+                    <strong class="text-white fs-6 class-name">{{ item.class.name }}</strong>
+                  </div>
+                </td>
+                <td>
+                  {% if item.sections %}
+                    <div class="d-flex flex-wrap gap-1">
+                      {% for sec in item.sections %}
+                        <span class="scho-badge scho-badge-primary" title="Class Teacher: {% if sec.class_teacher %}{{ sec.class_teacher.first_name }} {{ sec.class_teacher.last_name }}{% else %}Unassigned{% endif %}">
+                          Sec {{ sec.name }}
+                          {% if sec.class_teacher %}
+                            <small class="text-info ms-1">({{ sec.class_teacher.first_name }})</small>
+                          {% endif %}
+                        </span>
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                    <span class="text-secondary small">No sections</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge bg-secondary rounded-pill px-2 py-1">
+                    {{ item.student_count }} Students
+                  </span>
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'student:student_list' %}" class="btn btn-sm btn-outline-info" title="View Students">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-secondary py-4">
+                  No academic classes found.<br>
+                  <a href="/admin/classes/class/add/" target="_blank" class="btn btn-sm btn-primary mt-2">
+                    <i class="fa-solid fa-plus me-1"></i> Add Class
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recently Enrolled Students -->
+      <div class="scho-glass-card p-3 p-md-4 mb-4 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <h2 class="h5 fw-bold mb-1 text-white">
+              <i class="fa-solid fa-user-clock text-success me-2"></i> Recent Student Enrollments
+            </h2>
+            <span class="text-secondary small">Latest registered learners</span>
+          </div>
+          <a href="{% url 'student:student_list' %}" class="btn btn-sm btn-outline-light">
+            All <i class="fa-solid fa-chevron-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="scho-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Admission No</th>
+                <th>Class & Sec</th>
+                <th>Roll No</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in recent_students %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    {% if student.profile_pic %}
+                      <img src="{{ student.profile_pic.url }}" alt="{{ student.first_name }}" class="scho-student-avatar">
+                    {% else %}
+                      <div class="scho-student-avatar">
+                        {{ student.first_name|slice:":1"|upper }}{{ student.last_name|slice:":1"|upper }}
+                      </div>
+                    {% endif %}
+                    <div>
+                      <strong class="text-white d-block text-nowrap">{{ student.first_name }} {{ student.last_name }}</strong>
+                      <small class="text-secondary">{{ student.gender|title }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="text-info font-monospace text-nowrap">{{ student.admission_no }}</span>
+                </td>
+                <td>
+                  <span class="scho-badge scho-badge-primary text-nowrap">
+                    {{ student.class_name.name }} - {{ student.section.name }}
+                  </span>
+                </td>
+                <td>
+                  <span class="text-secondary fw-semibold">#{{ student.roll_no }}</span>
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'student:update_student' student.id %}" class="btn btn-sm btn-outline-primary" title="Edit Student">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-secondary py-4">
+                  No student records available yet.
+                  <a href="{% url 'student:create_student' %}" class="d-block mt-2 text-info">
+                    + Enroll your first student
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column (5/12) -->
+    <div class="col-lg-5">
+      
+      <!-- Quick Administration Actions -->
+      <div class="scho-glass-card p-3 p-md-4 mb-4">
+        <h2 class="h5 fw-bold mb-3 text-white">
+          <i class="fa-solid fa-bolt text-warning me-2"></i> Operations
+        </h2>
+        <div class="d-grid gap-2">
+          <a href="{% url 'student:create_student' %}" class="scho-action-btn">
+            <i class="fa-solid fa-user-plus text-primary"></i>
+            <div>
+              <div class="text-white">Enroll New Student</div>
+              <small class="text-secondary fw-normal">Create profile and auto-generate credentials</small>
+            </div>
+          </a>
+          <a href="{% url 'student:student_list' %}" class="scho-action-btn">
+            <i class="fa-solid fa-id-card text-info"></i>
+            <div>
+              <div class="text-white">Student Roster & Profiles</div>
+              <small class="text-secondary fw-normal">View, edit, or manage learners</small>
+            </div>
+          </a>
+          <a href="/teacher/list_teachers/" class="scho-action-btn">
+            <i class="fa-solid fa-users-rectangle text-success"></i>
+            <div>
+              <div class="text-white">Faculty Staff Directory</div>
+              <small class="text-secondary fw-normal">View teachers and class assignments</small>
+            </div>
+          </a>
+          <a href="/attendance/view/" class="scho-action-btn">
+            <i class="fa-solid fa-calendar-check text-warning"></i>
+            <div>
+              <div class="text-white">Daily Attendance Monitor</div>
+              <small class="text-secondary fw-normal">View class-wise attendance records</small>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Faculty Directory Snapshot -->
+      <div class="scho-glass-card p-3 p-md-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <h2 class="h5 fw-bold mb-1 text-white">
+              <i class="fa-solid fa-chalkboard-user text-success me-2"></i> Faculty Snapshot
+            </h2>
+            <span class="text-secondary small">Registered teaching staff</span>
+          </div>
+          <a href="/teacher/list_teachers/" class="btn btn-sm btn-outline-light">
+            All <i class="fa-solid fa-chevron-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="d-flex flex-column gap-2">
+          {% for teacher in teachers_list %}
+          <div class="p-2 p-md-3 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <div class="scho-kpi-icon scho-icon-emerald" style="width: 36px; height: 36px; font-size: 0.95rem;">
+                <i class="fa-solid fa-user-tie"></i>
+              </div>
+              <div>
+                <strong class="text-white d-block small">{{ teacher.first_name }} {{ teacher.last_name }}</strong>
+                <small class="text-secondary">
+                  {% if teacher.phone %}
+                    <i class="fa-solid fa-phone me-1"></i>{{ teacher.phone }}
+                  {% else %}
+                    <span class="fst-italic text-muted">No phone</span>
+                  {% endif %}
+                </small>
+              </div>
+            </div>
+            <div>
+              {% if teacher.class_teacher_of.all %}
+                <div class="d-flex flex-wrap gap-1 justify-content-end">
+                  {% for cls in teacher.class_teacher_of.all %}
+                    <span class="scho-badge scho-badge-success">{{ cls.name }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <span class="scho-badge scho-badge-purple">Staff</span>
+              {% endif %}
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center text-secondary py-3">
+            No faculty members assigned yet.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Recent System Notifications -->
+      <div class="scho-glass-card p-3 p-md-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <h2 class="h5 fw-bold mb-1 text-white">
+              <i class="fa-solid fa-bell text-warning me-2"></i> Notifications
+            </h2>
+            <span class="text-secondary small">Recent admin alerts</span>
+          </div>
+          <a href="/notification/" class="btn btn-sm btn-outline-light">
+            All <i class="fa-solid fa-chevron-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="d-flex flex-column gap-2">
+          {% for notif in recent_notifications %}
+          <div class="p-2 p-md-3 rounded bg-dark bg-opacity-50 border-start border-3 border-info">
+            <p class="text-white small mb-1" style="word-break: break-word;">{{ notif.message }}</p>
+            <small class="text-secondary">
+              <i class="fa-regular fa-clock me-1"></i> {{ notif.created_at|date:"M d, H:i" }}
+            </small>
+          </div>
+          {% empty %}
+          <div class="text-center text-secondary py-3">
+            <i class="fa-regular fa-bell-slash fa-2x mb-2 d-block text-muted"></i>
+            No new notifications.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </div>
-{% endblock extra %}
+
+<!-- =========================================================================
+     Client-Side Instant Search Filter Script
+     ========================================================================= -->
+<script>
+function filterClasses() {
+  const query = document.getElementById('classSearchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#classesTable .class-row');
+  
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (text.includes(query)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if messages %}
+<script>
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            Swal.fire({
+                title: "Success!",
+                text: "{{ message }}",
+                icon: "success",
+                draggable: true,
+                theme: "dark",
+                background: "#0f172a",
+                color: "#f8fafc",
+                confirmButtonColor: "#38bdf8"
+            });
+        {% endif %}
+    {% endfor %}
+</script>
+{% endif %}
+
+{% endblock content %}

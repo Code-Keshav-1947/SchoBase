@@ -1,78 +1,127 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Preview Attendance{% endblock %}
+{% block title %}Daily Attendance Log | SchoBase{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container-fluid px-lg-5 py-4">
+
     <!-- Header Card -->
-    <div class="row mb-4">
-        <div class="col-12 text-center">
-            <h2 class="display-6 fw-bold text-light">Preview Attendance</h2>
-            <p class="text-muted fs-5">
-                Class: <span class="fw-semibold text-primary">{{ class_name.name }}</span> | 
-                Date: <span class="fw-semibold">{{ date|date:"F d, Y" }}</span>
-            </p>
+    <div class="scho-glass-card p-4 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h2 class="h3 fw-bold mb-0 text-white">Daily Attendance Monitor</h2>
+                    <span class="scho-badge scho-badge-primary">{{ class_name.name }}</span>
+                </div>
+                <p class="text-secondary mb-0 small">
+                    <i class="fa-regular fa-calendar me-1 text-info"></i> {{ date|date:"l, F d, Y" }}
+                </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <div class="scho-search-box" style="min-width: 250px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="attSearchInput" class="form-control scho-search-input" placeholder="Search student name or roll..." onkeyup="filterAtt()">
+                </div>
+                <a href="/" class="btn btn-outline-light">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
     <!-- Attendance Table Card -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped align-middle mb-0">
-                    <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
-                        <tr>
-                            <th scope="col" class="ps-4" style="width: 15%;">Roll No.</th>
-                            <th scope="col" style="width: 55%;">Student Name</th>
-                            <th scope="col" class="text-center pe-4" style="width: 30%;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for student in students %}
-                            <tr>
-                                <!-- Roll Number -->
-                                <td class="ps-4 fw-semibold text-secondary">
-                                    {{ student.roll_no }}
-                                </td>
-                                
-                                <!-- Student Name -->
-                                <td class="fw-medium text-white">
-                                    {{ student.first_name }} {{ student.last_name }}
-                                </td>
-                                
-                                <!-- Dynamic Status Badge -->
-                                <td class="text-center pe-4">
-                                    {% if student.today_attendance.0.status == 'P' %}
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Present
-                                        </span>
-                                    {% elif student.today_attendance.0.status == 'A' %}
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
-                                            <i class="bi bi-x-circle-fill me-1"></i> Absent
-                                        </span>
-                                    {% elif student.today_attendance.0.status == 'L' %}
-                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill">
-                                            <i class="bi bi-envelope-fill me-1"></i> Leave
-                                        </span>
+    <div class="scho-glass-card p-4">
+        <div class="table-responsive">
+            <table class="scho-table" id="attTable">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Roll No</th>
+                        <th style="width: 45%;">Student</th>
+                        <th style="width: 25%;">Class & Section</th>
+                        <th style="width: 20%;" class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr class="att-row">
+                            <!-- Roll Number -->
+                            <td>
+                                <span class="text-white fw-bold">#{{ student.roll_no }}</span>
+                            </td>
+                            
+                            <!-- Student Name -->
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if student.profile_pic %}
+                                        <img src="{{ student.profile_pic.url }}" alt="{{ student.first_name }}" class="scho-student-avatar">
                                     {% else %}
-                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill">
-                                            <i class="bi bi-clock-history me-1"></i> Pending
-                                        </span>
+                                        <div class="scho-student-avatar">
+                                            {{ student.first_name|slice:":1"|upper }}{{ student.last_name|slice:":1"|upper }}
+                                        </div>
                                     {% endif %}
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="3" class="text-center py-5 text-muted">
-                                    <i class="bi bi-people fs-1 d-block mb-2"></i>
-                                    No student records found for this class.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                    <div>
+                                        <strong class="text-white d-block att-name">{{ student.first_name }} {{ student.last_name }}</strong>
+                                        <small class="text-info font-monospace">{{ student.admission_no }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <!-- Class & Section -->
+                            <td>
+                                <span class="scho-badge scho-badge-primary">
+                                    {{ student.class_name.name }} - Sec {{ student.section.name }}
+                                </span>
+                            </td>
+
+                            <!-- Dynamic Status Badge -->
+                            <td class="text-center">
+                                {% if student.today_attendance.0.status == 'P' %}
+                                    <span class="scho-badge scho-badge-success fs-6 px-3 py-2">
+                                        <i class="fa-solid fa-circle-check me-1"></i> Present
+                                    </span>
+                                {% elif student.today_attendance.0.status == 'A' %}
+                                    <span class="scho-badge scho-badge-danger fs-6 px-3 py-2">
+                                        <i class="fa-solid fa-circle-xmark me-1"></i> Absent
+                                    </span>
+                                {% elif student.today_attendance.0.status == 'L' %}
+                                    <span class="scho-badge scho-badge-warning fs-6 px-3 py-2">
+                                        <i class="fa-solid fa-envelope me-1"></i> On Leave
+                                    </span>
+                                {% else %}
+                                    <span class="scho-badge scho-badge-purple fs-6 px-3 py-2">
+                                        <i class="fa-regular fa-clock me-1"></i> Not Marked
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-secondary">
+                                <i class="fa-solid fa-users-slash fa-3x mb-3 text-muted d-block"></i>
+                                No student records found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+<script>
+function filterAtt() {
+  const query = document.getElementById('attSearchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#attTable .att-row');
+  
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (text.includes(query)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
 {% endblock content %}

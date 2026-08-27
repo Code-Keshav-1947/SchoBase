@@ -9,8 +9,11 @@ class Teacher(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
+    phone = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=255, blank=True)
     class_teacher_of = models.ManyToManyField("classes.Class", blank=True, related_name="class_teacher_of")
     school = models.ForeignKey("school.School", on_delete=models.CASCADE)
+
     def __str__(self):
         # 1. Fetch all assigned classes and join them with commas
         classes_list = ", ".join([str(cls) for cls in self.class_teacher_of.all()])
