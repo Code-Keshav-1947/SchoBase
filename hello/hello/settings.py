@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_browser_reload',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +148,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Storage Dir
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -192,3 +194,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_FAILURE_VIEW = 'hello.views.custom_csrf_failure'
+
+
+# Cloudlinary Setup
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'pbj7403z',
+    'API_KEY': '231565654611528',
+    'API_SECRET': '6erQbiUI-4AL-e40fzolcLwF2J8'
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
