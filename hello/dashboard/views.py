@@ -35,14 +35,26 @@ def dashboard(request):
                 "head": "Attendance",
                 "text": "Your today Attendance status was",
                 "status": att_status,
-                "url": "/",
+                "url": "",
             },
             {
                 "head": "Fees Status",
                 "text": "Your Fees status was",
                 "status": fee_status,
-                "url": "#",
+                "url": "",
             },
+            {
+                "head": "Homework   ",
+                "text": "View Homeworks assigned to you",
+                "status": "",
+                "url": "/homework",
+            },
+            {
+                "head": "Notification",
+                "text": "View notifications",
+                "status": "",
+                "url": "/notification",
+            }
         ]
         return render(request, "dashboard/student_dashboard.html", {"cards": cards, "user_name": user_name})
     if request.user.role == "teacher" and request.user.is_active == True:

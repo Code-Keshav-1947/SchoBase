@@ -39,7 +39,7 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="/">
-  <div style="width: 80px; height: auto;    " class="me-2 mb-2">
+  <div style="width: 80px; height: auto;" class="me-2 mb-2">
     <img src="{% static 'img/logo.png' %}" alt="SCHOBASE Icon" style="width: 100%; height: auto; transform: scale(1.3); transform-origin: top; margin-top: 2px;">
   </div>
   
@@ -50,7 +50,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="{% if request.path == '/' %}aria-current="page"{% endif %}" href="/">Home</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'dashboard' %} active aria-current="page"{% endif %}" href="/">Home</a>
         </li> {# I need the aria-current work properly ai fix it#}
         {% if nav_items %}
           {% for i in nav_items %}
@@ -65,11 +65,6 @@
             <button type="submit"value="Logout" class="btn btn-danger">Logout</button>
           </form>
         </li>
-        <form class="d-flex" role="search">
-          {% csrf_token %}
-          <input class="form-control" name="search" type="search" placeholder="Search" aria-label="Search"/>
-          <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </div>
 </nav>
