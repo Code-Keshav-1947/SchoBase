@@ -24,9 +24,9 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e5qnw96kb85r0ju2qbk88tuca1bu**1s=98s*jg*kxkxq-e5-c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['schobase.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['schobase.onrender.com', 'localhost','127.0.0.1']
 
 
 # Application definition

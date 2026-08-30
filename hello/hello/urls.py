@@ -18,17 +18,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView    
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('dashboard.urls'),name='dashboard'), 
-    path('acc/', include('accounts.urls'),name='accounts'),
-    path('student/', include('student.urls'),name='student'),
-    path('teacher/', include('teacher.urls'),name='teacher'),
-    path('notification/', include('notification.urls'),name='notification'),
-    path('attendance/',include('attendence.urls'),name = 'attendance'),
-    path('homework/',include('homework.urls'),name='homework'),
-    path('api/',include('api.urls'),name='api'),
+    path("admin/", admin.site.urls),
+    # API POST
+    path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("", include("dashboard.urls"), name="dashboard"),
+    path("acc/", include("accounts.urls"), name="accounts"),
+    path("student/", include("student.urls"), name="student"),
+    path("teacher/", include("teacher.urls"), name="teacher"),
+    path("notification/", include("notification.urls"), name="notification"),
+    path("attendance/", include("attendence.urls"), name="attendance"),
+    path("homework/", include("homework.urls"), name="homework"),
+    path("api/", include("api.urls"), name="api"),
     # path('school/', include('school.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
