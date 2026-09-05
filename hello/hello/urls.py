@@ -14,17 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView    
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # API POST
-    path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("", include("dashboard.urls"), name="dashboard"),
     path("acc/", include("accounts.urls"), name="accounts"),
     path("student/", include("student.urls"), name="student"),
@@ -37,7 +35,7 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 handler404 = "django.views.defaults.page_not_found"
-handler403 = 'django.views.defaults.permission_denied'
+handler403 = "django.views.defaults.permission_denied"
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

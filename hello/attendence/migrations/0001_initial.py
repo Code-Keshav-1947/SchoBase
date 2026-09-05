@@ -9,22 +9,60 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('student', '0001_initial'),
-        ('teacher', '0001_initial'),
+        ("student", "0001_initial"),
+        ("teacher", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Attendance',
+            name="Attendance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('status', models.CharField(choices=[('P', 'Present'), ('A', 'Absent'), ('L', 'Leave'), ('Pen', 'Pending')], default='Pen', max_length=3)),
-                ('marked_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='teacher.teacher')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='student.student', verbose_name='Student')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("P", "Present"),
+                            ("A", "Absent"),
+                            ("L", "Leave"),
+                            ("Pen", "Pending"),
+                        ],
+                        default="Pen",
+                        max_length=3,
+                    ),
+                ),
+                (
+                    "marked_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="teacher.teacher",
+                    ),
+                ),
+                (
+                    "student",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="student.student",
+                        verbose_name="Student",
+                    ),
+                ),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('student', 'date'), name='unique_student_attendance_per_day')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("student", "date"),
+                        name="unique_student_attendance_per_day",
+                    )
+                ],
             },
         ),
     ]

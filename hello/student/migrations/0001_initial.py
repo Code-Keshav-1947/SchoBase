@@ -10,31 +10,84 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('classes', '0001_initial'),
-        ('school', '0001_initial'),
-        ('section', '0001_initial'),
+        ("classes", "0001_initial"),
+        ("school", "0001_initial"),
+        ("section", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Student',
+            name="Student",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('profile_pic', models.ImageField(blank=True, null=True, upload_to='profiles_pics/')),
-                ('first_name', models.CharField(max_length=100)),
-                ('last_name', models.CharField(blank=True, max_length=100)),
-                ('admission_no', models.CharField(max_length=20)),
-                ('roll_no', models.IntegerField()),
-                ('date_of_birth', models.DateField()),
-                ('gender', models.CharField(choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], max_length=6)),
-                ('phone', models.CharField(blank=True, max_length=15)),
-                ('address', models.CharField(blank=True, help_text='Enter the address of the student', max_length=50, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('class_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='classes.class')),
-                ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='school.school')),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='section.section')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "profile_pic",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="profiles_pics/"
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=100)),
+                ("last_name", models.CharField(blank=True, max_length=100)),
+                ("admission_no", models.CharField(max_length=20)),
+                ("roll_no", models.IntegerField()),
+                ("date_of_birth", models.DateField()),
+                (
+                    "gender",
+                    models.CharField(
+                        choices=[
+                            ("male", "Male"),
+                            ("female", "Female"),
+                            ("other", "Other"),
+                        ],
+                        max_length=6,
+                    ),
+                ),
+                ("phone", models.CharField(blank=True, max_length=15)),
+                (
+                    "address",
+                    models.CharField(
+                        blank=True,
+                        help_text="Enter the address of the student",
+                        max_length=50,
+                        null=True,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "class_name",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="classes.class"
+                    ),
+                ),
+                (
+                    "school",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="school.school"
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="section.section",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

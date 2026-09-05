@@ -9,18 +9,36 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('classes', '0001_initial'),
-        ('school', '0001_initial'),
+        ("classes", "0001_initial"),
+        ("school", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Section',
+            name="Section",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=5)),
-                ('class_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='classes.class')),
-                ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='school.school')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=5)),
+                (
+                    "class_name",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="classes.class"
+                    ),
+                ),
+                (
+                    "school",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="school.school"
+                    ),
+                ),
             ],
         ),
     ]

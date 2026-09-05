@@ -9,16 +9,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('section', '0001_initial'),
+        ("section", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Subjects',
+            name="Subjects",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='section.section')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="section.section",
+                    ),
+                ),
             ],
         ),
     ]

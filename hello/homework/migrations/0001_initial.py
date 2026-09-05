@@ -9,23 +9,52 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('section', '0002_section_class_teacher'),
-        ('subject', '0002_rename_subjects_subject'),
-        ('teacher', '0001_initial'),
+        ("section", "0002_section_class_teacher"),
+        ("subject", "0002_rename_subjects_subject"),
+        ("teacher", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Homework',
+            name="Homework",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('body', models.CharField(max_length=600)),
-                ('date_assigned', models.DateTimeField()),
-                ('date_submitted_required', models.DateTimeField()),
-                ('files', models.FileField(blank=True, null=True, upload_to='documents/')),
-                ('assigned_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='teacher.teacher')),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='section.section')),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='subject.subject')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("body", models.CharField(max_length=600)),
+                ("date_assigned", models.DateTimeField()),
+                ("date_submitted_required", models.DateTimeField()),
+                (
+                    "files",
+                    models.FileField(blank=True, null=True, upload_to="documents/"),
+                ),
+                (
+                    "assigned_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="teacher.teacher",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="section.section",
+                    ),
+                ),
+                (
+                    "subject",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="subject.subject",
+                    ),
+                ),
             ],
         ),
     ]

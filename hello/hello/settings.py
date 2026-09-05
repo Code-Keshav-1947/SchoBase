@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
 import os
 import pathlib
 import dj_database_url
@@ -21,97 +22,97 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-e5qnw96kb85r0ju2qbk88tuca1bu**1s=98s*jg*kxkxq-e5-c'
+SECRET_KEY = "django-insecure-e5qnw96kb85r0ju2qbk88tuca1bu**1s=98s*jg*kxkxq-e5-c"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = False if os.getenv("DATABASE_URL") else True
 
-ALLOWED_HOSTS = ['schobase.onrender.com', 'localhost','127.0.0.1']
+ALLOWED_HOSTS = ["schobase.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'dashboard',
-    'accounts',
-    'school',
-    'school_admin',
-    'teacher',
-    'student',
-    'attendence',
-    'classes',
-    'section',
-    'subject',
-    'homework',
-    'notification',
-    'corsheaders',
-    'api',
-    'rest_framework',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_browser_reload',
-    'cloudinary_storage',
-    'cloudinary',
+    "dashboard",
+    "accounts",
+    "school",
+    "school_admin",
+    "teacher",
+    "student",
+    "attendence",
+    "classes",
+    "section",
+    "subject",
+    "homework",
+    "notification",
+    "corsheaders",
+    "api",
+    "rest_framework",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_browser_reload",
+    "cloudinary_storage",
+    "cloudinary",
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'hello.urls'
+ROOT_URLCONF = "hello.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'accounts.context_processors.nav_items'
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "accounts.context_processors.nav_items",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'hello.wsgi.application'
+WSGI_APPLICATION = "hello.wsgi.application"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if os.getenv('DATABASE_URL'):
+if os.getenv("DATABASE_URL"):
     # Note: Ensure your DATABASE_URL environment variable has '-pooler' in it.
     DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
             conn_max_age=600,  # 10 minutes (Optimal for Serverless + Pooler)
-            conn_health_checks=True, # Ensure connection isn't broken
-            ssl_require=True
+            conn_health_checks=True,  # Ensure connection isn't broken
+            ssl_require=True,
         )
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
@@ -132,16 +133,16 @@ REST_FRAMEWORK = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -159,9 +160,9 @@ STORAGES = {
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 # Purane wale ko badalkar aisa likhein:
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_TZ = False  # Agar yeh True hai, toh ise False kar dein
 
@@ -169,37 +170,38 @@ USE_TZ = False  # Agar yeh True hai, toh ise False kar dein
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
 # lOGIN, LOGOUT AND USER MODEL
-LOGIN_URL = '/acc/login/'
+LOGIN_URL = "/acc/login/"
 AUTH_USER_MODEL = "accounts.CustomUser"
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = "login"
 
 import mimetypes
+
 mimetypes.add_type("text/css", ".css", True)
 mimetypes.add_type("image/png", ".png", True)
 mimetypes.add_type("image/jpeg", ".jpg", True)
 mimetypes.add_type("image/gif", ".gif", True)
 
 # Media files (Uploaded by users)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CSRF_FAILURE_VIEW = 'hello.views.custom_csrf_failure'
+CSRF_FAILURE_VIEW = "hello.views.custom_csrf_failure"
 
 
 # Cloudlinary Setup
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'pbj7403z',
-    'API_KEY': '231565654611528',
-    'API_SECRET': '6erQbiUI-4AL-e40fzolcLwF2J8'
+    "CLOUD_NAME": "pbj7403z",
+    "API_KEY": "231565654611528",
+    "API_SECRET": "6erQbiUI-4AL-e40fzolcLwF2J8",
 }
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

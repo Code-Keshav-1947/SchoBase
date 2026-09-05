@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('section', '0001_initial'),
-        ('teacher', '0001_initial'),
+        ("section", "0001_initial"),
+        ("teacher", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='section',
-            name='class_teacher',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='teacher.teacher'),
+            model_name="section",
+            name="class_teacher",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="teacher.teacher",
+            ),
         ),
     ]

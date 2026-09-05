@@ -14,7 +14,7 @@ class Student(models.Model):
     ]
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='profiles_pics/', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to="profiles_pics/", blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100, blank=True)
     admission_no = models.CharField(max_length=20)
@@ -24,7 +24,12 @@ class Student(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=6, choices=gender_choices)
     phone = models.CharField(max_length=15, blank=True)
-    address = models.CharField(blank=True, null=True, help_text="Enter the address of the student",max_length=50)
+    address = models.CharField(
+        blank=True,
+        null=True,
+        help_text="Enter the address of the student",
+        max_length=50,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -26,4 +26,3 @@ def nav_items(request):
 
     role = getattr(request.user, "role", None)
     return {"nav_items": NAV_ITEMS_BY_ROLE.get(role, [])}
-

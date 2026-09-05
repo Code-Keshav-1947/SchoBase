@@ -7,25 +7,35 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('classes', '0001_initial'),
-        ('school', '0001_initial'),
-        ('section', '0002_section_class_teacher'),
+        ("classes", "0001_initial"),
+        ("school", "0001_initial"),
+        ("section", "0002_section_class_teacher"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='section',
-            name='class_name',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='classes.class'),
+            model_name="section",
+            name="class_name",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="classes.class",
+            ),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='name',
+            model_name="section",
+            name="name",
             field=models.CharField(blank=True, max_length=5, null=True),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='school',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='school.school'),
+            model_name="section",
+            name="school",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="school.school",
+            ),
         ),
     ]
